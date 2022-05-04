@@ -1,5 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 const { sequelize } = require("./models");
 const usersRouter = require("./routers/users");
@@ -13,6 +15,16 @@ sequelize.sync({ force: false })
 
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.COOKIE_SECRET,
+  cookie: {
+    httpOnly: true,
+    secure: false
+  }
+}));
 
 app.use("/api/users", usersRouter);
 
