@@ -31,4 +31,10 @@ router.get("/current-user", (req, res) => {
     });
 });
 
+router.post("/logout", (req, res) => {
+  req.logout();
+  req.session.destroy();
+  res.status(200).send();
+});
+
 module.exports = router;
