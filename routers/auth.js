@@ -23,4 +23,12 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
+router.get("/current-user", (req, res) => {
+  return res.status(200)
+    .json({
+      isLoggedIn: Boolean(req.user),
+      username: req.user?.username ?? ""
+    });
+});
+
 module.exports = router;
