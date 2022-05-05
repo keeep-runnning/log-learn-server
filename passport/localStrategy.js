@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const LocalStrategy = require("passport-local").Strategy;
 
 const { User } = require("../models");
+const { BusinessError } = require("../errors/BusinessError");
 
 module.exports = () => {
   passport.use(new LocalStrategy({
@@ -18,9 +19,11 @@ module.exports = () => {
           return;
         }
       }
-      const loginFailError = new Error("이메일 혹은 비밀번호가 유효하지 않습니다.");
-      loginFailError.status = 401;
-      loginFailError.code = "auth-001";
+      const loginFailError = new BusinessError({
+        message: "이메일 혹은 비밀번호가 유효하지 않습니다.",
+        statusCode: 401,
+        errorCode: "auth-001"
+      });
       done(loginFailError);
     } catch(error) {
       console.log(error);

@@ -6,6 +6,7 @@ const passport = require("passport");
 const dotenv = require("dotenv");
 
 const { sequelize } = require("./models");
+const { BusinessError } = require("./errors/BusinessError");
 const passportConfig = require("./passport");
 const usersRouter = require("./routers/users");
 const authRouter = require("./routers/auth");
@@ -40,18 +41,28 @@ app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 
 app.use((req, res, next) => {
-  const notFoundError = new Error(`[${req.method}] [${req.url}] router does not exist.`);
-  notFoundError.status = 404;
-  notFoundError.code = "common-005";
+  const notFoundError = new BusinessError({
+    message: `[${req.method}] [${req.url}] 존재하지 않는 경로입니다.`,
+    statusCode: 404,
+    errorCode: "common-005"
+  });
   next(notFoundError);
 });
 
 app.use((error, req, res, next) => {
   console.error("error:", error.message);
-  res.status(error?.status ?? 500).json({
-    code: error?.code ?? "common-004",
-    errorMessage: error?.message ?? "서버에 문제가 발생했습니다.",
-    errors: error?.errors ?? []
+  if(error instanceof BusinessError) {
+    return res.status(error.statusCode)
+      .json({
+        code: error.errorCode,
+        errorMessage: error.message,
+        errors: error.errors
+      });
+  }
+  res.status(500).json({
+    code: "common-004",
+    errorMessage: "서버에 문제가 발생했습니다.",
+    errors: []
   });
 });
 
