@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 const { sequelize } = require("./models");
 const { BusinessError } = require("./errors/BusinessError");
@@ -22,6 +23,10 @@ sequelize.sync({ force: false })
   .then(() => console.log("database is connected..."))
   .catch((error) => console.error(error));
 
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
