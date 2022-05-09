@@ -23,6 +23,6 @@ module.exports = class Post extends Model {
   }
 
   static associate(db) {
-    db.Post.belongsTo(db.User, { foreignKey: "authorId", targetKey: "id" });
+    db.Post.belongsTo(db.User);
   }
 };
