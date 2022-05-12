@@ -23,11 +23,11 @@ router.post("/", async (req, res, next) => {
     });
     return res.status(201)
       .json({
-        id: newPost.id,
+        id: String(newPost.id),
         title: newPost.title,
         content: newPost.content,
         author: newPost.User.username,
-        createdAt: newPost.createdAt
+        createdAt: newPost.createdAt.toISOString()
       });
   } catch(error) {
     console.error(error);
@@ -49,17 +49,16 @@ router.get("/:postId", async (req, res, next) => {
       const postNotFoundError = new BusinessError({
         errorCode: "post-001",
         message: "블로그 포스트가 없습니다.",
-        errors: [],
         statusCode: 404
       });
       return next(postNotFoundError);
     }
     return res.json({
-      id: post.id,
+      id: String(post.id),
       title: post.title,
       content: post.content,
       author: post.User.username,
-      createdAt: post.createdAt
+      createdAt: post.createdAt.toISOString()
     });
   } catch(error) {
     console.error(error);
