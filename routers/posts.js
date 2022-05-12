@@ -67,4 +67,49 @@ router.get("/:postId", async (req, res, next) => {
   }
 });
 
+router.patch("/:postId", async (req, res, next) => {
+  if(!req.user) {
+    const notLoggedInError = new BusinessError({
+      message: "로그인이 필요합니다.",
+      statusCode: 401,
+      errorCode: "common-002"
+    });
+    return next(notLoggedInError);
+  }
+
+  const { postId } = req.params;
+  const { title, content } = req.body;
+  try{
+    const postFoundById = await Post.findOne({
+      where: {
+        id: postId
+      },
+      include: [
+        { model: User, attributes: ["id", "username"] }
+      ]
+    });
+    if(!postFoundById) {
+      const postNotFoundError = new BusinessError({
+        message: "블로그 포스트가 없습니다.",
+        statusCode: 404,
+        errorCode: "post-001"
+      });
+      return next(postNotFoundError);
+    }
+    if(postFoundById.User.id !== req.user.id) {
+      const notAuthorizedError = new BusinessError({
+        message: "권한이 없습니다.",
+        statusCode: 403,
+        errorCode: "common-003"
+      });
+      return next(notAuthorizedError);
+    }
+    await postFoundById.update({ title, content });
+    return res.status(204).json();
+  } catch(error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
