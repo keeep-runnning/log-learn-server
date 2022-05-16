@@ -1,4 +1,5 @@
 const express = require("express");
+const { Op } = require("sequelize");
 
 const { Post, User } = require("../models");
 const { BusinessError } = require("../errors/BusinessError");
@@ -105,6 +106,45 @@ router.patch("/:postId", async (req, res, next) => {
     }
     await postFoundById.update({ title, content });
     return res.status(204).json();
+  } catch(error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.get("/", async (req, res, next) => {
+  const PAGE_SIZE = 10;
+  const { cursor = "-1", authorName } = req.query;
+  try {
+    const author = await User.findOne({
+      where: { username: authorName }
+    });
+    const filter = {
+      where: {
+        UserId: author?.id ?? "-1"
+      },
+      include: [
+        { model: User, attributes: ["username"] }
+      ],
+      order: [["id", "DESC"]],
+      limit: PAGE_SIZE
+    };
+    if(cursor !== "-1") {
+      filter.where.id = {
+        [Op.lt]: cursor
+      };
+    }
+    const posts = await Post.findAll(filter);
+    return res.json({
+      posts: posts.map(post => ({
+        id: String(post.id),
+        author: post.User.username,
+        title: post.title,
+        content: post.content,
+        createdAt: post.createdAt.toISOString()
+      })),
+      nextCursor: posts.length === PAGE_SIZE ? String(posts[posts.length-1].id) : null
+    });
   } catch(error) {
     console.error(error);
     next(error);
