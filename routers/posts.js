@@ -151,4 +151,28 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.delete("/:postId", async (req, res, next) => {
+  const { postId } = req.params;
+  try {
+    const post = await Post.findOne({
+      where: {
+        id: postId
+      }
+    });
+    if(!post) {
+      const postNotFoundError = new BusinessError({
+        message: "블로그 포스트가 없습니다.",
+        statusCode: 404,
+        errorCode: "post-001"
+      });
+      return next(postNotFoundError);
+    }
+    await post.destroy();
+    return res.status(204).json();
+  } catch(error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
