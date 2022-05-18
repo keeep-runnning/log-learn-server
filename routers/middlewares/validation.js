@@ -64,7 +64,12 @@ const validatePostCreationRequestBody = validate(
   [validatePostTitle, validatePostContent]
 );
 
+const validatePostUpdateRequestBody = validate(
+  [validatePostTitle, validatePostContent]
+);
+
 module.exports = {
   validateUserCreationRequestBody,
-  validatePostCreationRequestBody
+  validatePostCreationRequestBody,
+  validatePostUpdateRequestBody
 };

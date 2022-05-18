@@ -4,7 +4,7 @@ const { Op } = require("sequelize");
 const { Post, User } = require("../models");
 const { BusinessError } = require("../errors/BusinessError");
 const { isLoggedIn } = require("./middlewares/auth");
-const { validatePostCreationRequestBody } = require("./middlewares/validation");
+const { validatePostCreationRequestBody, validatePostUpdateRequestBody } = require("./middlewares/validation");
 
 const router = express.Router();
 
@@ -80,6 +80,7 @@ router.get(
 router.patch(
   "/:postId",
   isLoggedIn,
+  validatePostUpdateRequestBody,
   async (req, res, next) => {
     if(!req.user) {
       const notLoggedInError = new BusinessError({
