@@ -2,13 +2,13 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 
 const { User } = require("../models");
-const { validate, validateUserCreationRequestBody } = require("./middlewares/validation");
+const { validateUserCreationRequestBody } = require("./middlewares/validation");
 
 const router = express.Router();
 
 router.post(
   "/",
-  validate(validateUserCreationRequestBody),
+  validateUserCreationRequestBody,
   async (req, res, next) => {
     const { username, email, password: rawPassword } = req.body;
     try {

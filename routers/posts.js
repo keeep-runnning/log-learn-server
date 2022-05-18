@@ -4,14 +4,14 @@ const { Op } = require("sequelize");
 const { Post, User } = require("../models");
 const { BusinessError } = require("../errors/BusinessError");
 const { isLoggedIn } = require("./middlewares/auth");
-const { validate, validatePostCreationRequestBody } = require("./middlewares/validation");
+const { validatePostCreationRequestBody } = require("./middlewares/validation");
 
 const router = express.Router();
 
 router.post(
   "/",
   isLoggedIn,
-  validate(validatePostCreationRequestBody),
+  validatePostCreationRequestBody,
   async (req, res, next) => {
     const { title, content } = req.body;
     const { id: authorId } = req.user;
