@@ -3,7 +3,8 @@ const { Op } = require("sequelize");
 
 const { Post, User } = require("../models");
 const { BusinessError } = require("../errors/BusinessError");
-const { isLoggedIn, validate, validatePostCreationRequestBody } = require("./middlewares");
+const { isLoggedIn } = require("./middlewares/auth");
+const { validate, validatePostCreationRequestBody } = require("./middlewares/validation");
 
 const router = express.Router();
 
