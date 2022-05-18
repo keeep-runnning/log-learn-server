@@ -82,15 +82,6 @@ router.patch(
   isLoggedIn,
   validatePostUpdateRequestBody,
   async (req, res, next) => {
-    if(!req.user) {
-      const notLoggedInError = new BusinessError({
-        message: "로그인이 필요합니다.",
-        statusCode: 401,
-        errorCode: "common-002"
-      });
-      return next(notLoggedInError);
-    }
-
     const { postId } = req.params;
     const { title, content } = req.body;
     try{
