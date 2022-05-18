@@ -57,4 +57,20 @@ const validateUserCreationRequestBody = [
       .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요.")
 ];
 
-module.exports = { isLoggedIn, validate, validateUserCreationRequestBody };
+const validatePostCreationRequestBody = [
+  body("title")
+    .not().isEmpty({ ignore_whitespace: true })
+      .withMessage("블로그 포스트 제목을 입력해주세요.").bail().trim()
+    .isLength({ max: 100 })
+      .withMessage("블로그 포스트 제목은 최대 100자 까지 입력할 수 있습니다."),
+  body("content")
+    .not().isEmpty({ ignore_whitespace: true })
+      .withMessage("블로그 포스트 내용을 입력해주세요.").trim()
+];
+
+module.exports = {
+  isLoggedIn,
+  validate,
+  validateUserCreationRequestBody,
+  validatePostCreationRequestBody
+};
