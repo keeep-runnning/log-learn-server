@@ -22,6 +22,15 @@ router.post(
         });
         return next(duplicatedUsernameError);
       }
+      const userFoundByEmail = await User.findOne({ where: { email }});
+      if(userFoundByEmail) {
+        const duplicatedEmailError = new BusinessError({
+          errorCode: "user-002",
+          message: "이미 사용중인 이메일입니다.",
+          statusCode: 409
+        });
+        return next(duplicatedEmailError);
+      }
       const hashedPassword = await bcrypt.hash(rawPassword, 10);
       await User.create({ username, email, password: hashedPassword });
       res.status(200).send();
