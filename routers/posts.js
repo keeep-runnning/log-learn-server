@@ -5,6 +5,7 @@ const { Post, User } = require("../models");
 const { BusinessError } = require("../errors/BusinessError");
 const { isLoggedIn } = require("./middlewares/auth");
 const { validatePostCreationRequestBody, validatePostUpdateRequestBody } = require("./middlewares/validation");
+const { isPostAuthor } = require("./utils");
 
 const router = express.Router();
 
@@ -90,7 +91,7 @@ router.patch(
           id: postId
         },
         include: [
-          { model: User, attributes: ["id", "username"] }
+          { model: User, attributes: ["id"] }
         ]
       });
       if(!postFoundById) {
@@ -101,7 +102,7 @@ router.patch(
         });
         return next(postNotFoundError);
       }
-      if(postFoundById.User.id !== req.user.id) {
+      if(!isPostAuthor(req.user, postFoundById)) {
         const notAuthorizedError = new BusinessError({
           message: "권한이 없습니다.",
           statusCode: 403,
@@ -169,7 +170,10 @@ router.delete(
       const post = await Post.findOne({
         where: {
           id: postId
-        }
+        },
+        include: [
+          { model: User, attributes: ["id"]}
+        ]
       });
       if(!post) {
         const postNotFoundError = new BusinessError({
@@ -178,6 +182,14 @@ router.delete(
           errorCode: "post-001"
         });
         return next(postNotFoundError);
+      }
+      if(!isPostAuthor(req.user, post)) {
+        const notAuthorizedError = new BusinessError({
+          message: "권한이 없습니다.",
+          statusCode: 403,
+          errorCode: "common-003"
+        });
+        return next(notAuthorizedError);
       }
       await post.destroy();
       return res.status(204).json();
