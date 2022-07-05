@@ -12,6 +12,7 @@ const passportConfig = require("./passport");
 const usersRouter = require("./routers/users");
 const authRouter = require("./routers/auth");
 const postsRouter = require("./routers/posts");
+const settingsRouter = require("./routers/settings");
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use(passport.session());
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postsRouter);
+app.use("/api/settings", settingsRouter);
 
 app.use((req, res, next) => {
   const notFoundError = new BusinessError({
