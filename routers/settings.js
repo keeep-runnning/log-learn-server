@@ -1,10 +1,12 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 
 const { isLoggedIn } = require("./middlewares/auth");
 const { User } = require("../models");
 const {
   validateUsernameUpdateRequestBody,
-  validateShortIntroductionUpdateRequestBody
+  validateShortIntroductionUpdateRequestBody,
+  validatePasswordUpdateRequestBody
 } = require("./middlewares/validation");
 const { BusinessError } = require("../errors/BusinessError");
 
@@ -87,6 +89,35 @@ router.patch(
     try {
       const currentUser = await User.findOne({ where: { id: currentUserId } });
       await currentUser.update({ introduction });
+      res.status(204).json({});
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch(
+  "/password",
+  isLoggedIn,
+  validatePasswordUpdateRequestBody,
+  async (req, res, next) => {
+    const { password, newPassword } = req.body;
+    const { id: currentUserId } = req.user;
+
+    try{
+      const currentUser = await User.findOne({ where: { id: currentUserId } });
+      const isPasswordValid = await bcrypt.compare(password, currentUser.password);
+      if (!isPasswordValid) {
+        const passwordInvalidError = new BusinessError({
+          statusCode: 409,
+          errorCode: "user-003",
+          message: "비밀번호가 올바르지 않습니다."
+        });
+        return next(passwordInvalidError);
+      }
+
+      const newHashedPassword = await bcrypt.hash(newPassword, 10);
+      await currentUser.update({ password: newHashedPassword });
       res.status(204).json({});
     } catch (error) {
       next(error);

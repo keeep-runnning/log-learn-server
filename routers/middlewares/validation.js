@@ -46,6 +46,14 @@ const validateUserPassword = body("password")
   .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
     .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요.");
 
+const validateUserNewPassword = body("newPassword")
+  .notEmpty()
+    .withMessage("새 비밀번호를 입력해주세요.").bail()
+  .isLength({ min: 8, max: 32 })
+    .withMessage("새 비밀번호를 8자 이상 32자 이하로 입력해주세요.").bail()
+  .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
+    .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요.");
+
 const validatePostTitle = body("title")
   .not().isEmpty({ ignore_whitespace: true })
     .withMessage("블로그 포스트 제목을 입력해주세요.").bail().trim()
@@ -76,10 +84,13 @@ const validateUsernameUpdateRequestBody = validate([validateUserName]);
 
 const validateShortIntroductionUpdateRequestBody = validate([validateShortIntroduction]);
 
+const validatePasswordUpdateRequestBody = validate([validateUserNewPassword]);
+
 module.exports = {
   validateUserCreationRequestBody,
   validatePostCreationRequestBody,
   validatePostUpdateRequestBody,
   validateUsernameUpdateRequestBody,
-  validateShortIntroductionUpdateRequestBody
+  validateShortIntroductionUpdateRequestBody,
+  validatePasswordUpdateRequestBody
 };
