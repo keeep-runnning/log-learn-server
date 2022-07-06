@@ -77,4 +77,21 @@ router.patch(
   }
 );
 
+router.patch(
+  "/introduction",
+  isLoggedIn,
+  async (req, res, next) => {
+    const { introduction } = req.body;
+    const { id: currentUserId } = req.user;
+
+    try {
+      const currentUser = await User.findOne({ where: { id: currentUserId } });
+      await currentUser.update({ introduction });
+      res.status(204).json({});
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 module.exports = router;
