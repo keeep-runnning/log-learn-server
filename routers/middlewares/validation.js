@@ -56,6 +56,10 @@ const validatePostContent = body("content")
   .not().isEmpty({ ignore_whitespace: true })
     .withMessage("블로그 포스트 내용을 입력해주세요.").trim();
 
+const validateShortIntroduction = body("shortIntroduction")
+  .isLength({ max: 120 })
+    .withMessage("짧은 소개는 최대 120자 까지 입력할 수 있습니다.");
+
 const validateUserCreationRequestBody = validate(
   [validateUserName, validateUserEmail, validateUserPassword]
 );
@@ -70,9 +74,12 @@ const validatePostUpdateRequestBody = validate(
 
 const validateUsernameUpdateRequestBody = validate([validateUserName]);
 
+const validateShortIntroductionUpdateRequestBody = validate([validateShortIntroduction]);
+
 module.exports = {
   validateUserCreationRequestBody,
   validatePostCreationRequestBody,
   validatePostUpdateRequestBody,
-  validateUsernameUpdateRequestBody
+  validateUsernameUpdateRequestBody,
+  validateShortIntroductionUpdateRequestBody
 };

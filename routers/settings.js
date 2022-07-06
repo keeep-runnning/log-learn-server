@@ -2,7 +2,10 @@ const express = require("express");
 
 const { isLoggedIn } = require("./middlewares/auth");
 const { User } = require("../models");
-const { validateUsernameUpdateRequestBody } = require("./middlewares/validation");
+const {
+  validateUsernameUpdateRequestBody,
+  validateShortIntroductionUpdateRequestBody
+} = require("./middlewares/validation");
 const { BusinessError } = require("../errors/BusinessError");
 
 const router = express.Router();
@@ -49,6 +52,24 @@ router.patch(
 
       const currentUser = await User.findOne({ where: { id } });
       await currentUser.update({ username: newUsername });
+      res.status(204).json({});
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch(
+  "/short-introduction",
+  isLoggedIn,
+  validateShortIntroductionUpdateRequestBody,
+  async (req, res, next) => {
+    const { shortIntroduction } = req.body;
+    const { id: currentUserId } = req.user;
+
+    try {
+      const currentUser = await User.findOne({ where: { id: currentUserId } });
+      await currentUser.update({ shortIntroduction });
       res.status(204).json({});
     } catch (error) {
       next(error);
