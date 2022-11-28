@@ -31,10 +31,12 @@ router.get("/current-user", (req, res) => {
     });
 });
 
-router.post("/logout", (req, res) => {
-  req.logout();
-  req.session.destroy();
-  res.status(200).send();
+router.post("/logout", (req, res, next) => {
+  req.logout((err => {
+    if(err) return next(err);
+    req.session.destroy();
+    res.status(200).send();
+  }));
 });
 
 module.exports = router;
