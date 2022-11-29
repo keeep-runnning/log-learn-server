@@ -12,8 +12,8 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 User.init(sequelize);
 Post.init(sequelize);
 
-db.User=User;
-db.Post=Post;
+db.User = User;
+db.Post = Post;
 
 User.associate(db);
 Post.associate(db);
