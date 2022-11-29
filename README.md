@@ -53,8 +53,7 @@
      COOKIE_SECRET="{signed cookie를 사용하기 위한 cookie secret}"
      ```
 
-     > 📌 `.env` 파일 작성 전에... <br>
-     > `mysql`이 `local`에 설치되어 있어야 합니다. <br>
+     > 📌 `.env` 파일 작성 전에... <br> > `mysql`이 `local`에 설치되어 있어야 합니다. <br>
      > 데이터베이스 관련 설정(유저 생성, 데이터베이스 생성)이 되어 있어야 합니다.
 
 3. 실행

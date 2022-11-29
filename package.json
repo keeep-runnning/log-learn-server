@@ -4,7 +4,9 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "lint": "eslint --fix .",
+    "prepare": "husky install"
   },
   "license": "MIT",
   "dependencies": {
@@ -22,8 +24,19 @@
     "sequelize": "^6.19.0"
   },
   "devDependencies": {
+    "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.4",
     "nodemon": "^2.0.16",
     "prettier": "2.8.0",
     "sequelize-cli": "^6.4.1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,md}": "prettier --write"
   }
 }
