@@ -1,11 +1,12 @@
-const passport = require("passport");
-const bcrypt = require("bcrypt");
-const LocalStrategy = require("passport-local").Strategy;
+import passport from "passport";
+import bcrypt from "bcrypt";
+import passportLocal from "passport-local";
+import db from "../models/index.js";
+import BusinessError from "../errors/BusinessError.js";
 
-const { User } = require("../models");
-const { BusinessError } = require("../errors/BusinessError");
+const LocalStrategy = passportLocal.Strategy;
 
-module.exports = () => {
+export default function () {
   passport.use(
     new LocalStrategy(
       {
@@ -14,7 +15,7 @@ module.exports = () => {
       },
       async (email, password, done) => {
         try {
-          const userFoundByEmail = await User.findOne({ where: { email } });
+          const userFoundByEmail = await db.User.findOne({ where: { email } });
           if (userFoundByEmail) {
             const isPasswordValid = await bcrypt.compare(password, userFoundByEmail.password);
             if (isPasswordValid) {
@@ -35,4 +36,4 @@ module.exports = () => {
       }
     )
   );
-};
+}

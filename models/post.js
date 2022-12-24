@@ -1,6 +1,6 @@
-const { Model, DataTypes } = require("sequelize");
+import { Model, DataTypes } from "sequelize";
 
-module.exports = class Post extends Model {
+export default class Post extends Model {
   static init(sequelize) {
     return super.init(
       {
@@ -28,4 +28,4 @@ module.exports = class Post extends Model {
   static associate(db) {
     db.Post.belongsTo(db.User);
   }
-};
+}

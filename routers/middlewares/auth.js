@@ -1,6 +1,6 @@
-const { BusinessError } = require("../../errors/BusinessError");
+import BusinessError from "../../errors/BusinessError.js";
 
-const isLoggedIn = (req, res, next) => {
+export const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     const notLoggedInError = new BusinessError({
       errorCode: "common-002",
@@ -11,5 +11,3 @@ const isLoggedIn = (req, res, next) => {
   }
   next();
 };
-
-module.exports = { isLoggedIn };

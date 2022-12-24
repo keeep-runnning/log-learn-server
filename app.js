@@ -1,18 +1,17 @@
-const express = require("express");
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const passport = require("passport");
-const dotenv = require("dotenv");
-const cors = require("cors");
-
-const { sequelize } = require("./models");
-const { BusinessError } = require("./errors/BusinessError");
-const passportConfig = require("./passport");
-const usersRouter = require("./routers/users");
-const authRouter = require("./routers/auth");
-const postsRouter = require("./routers/posts");
-const settingsRouter = require("./routers/settings");
+import express from "express";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import passport from "passport";
+import dotenv from "dotenv";
+import cors from "cors";
+import db from "./models/index.js";
+import BusinessError from "./errors/BusinessError.js";
+import passportConfig from "./passport/index.js";
+import usersRouter from "./routers/users.js";
+import authRouter from "./routers/auth.js";
+import postsRouter from "./routers/posts.js";
+import settingsRouter from "./routers/settings.js";
 
 const app = express();
 
@@ -21,7 +20,7 @@ passportConfig();
 
 app.set("port", process.env.PORT || 8080);
 
-sequelize
+db.sequelize
   .sync({ force: false })
   .then(() => console.log("database is connected..."))
   .catch((error) => console.error(error));

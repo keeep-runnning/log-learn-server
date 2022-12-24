@@ -1,4 +1,4 @@
-class BusinessError extends Error {
+export default class BusinessError extends Error {
   constructor({ message, statusCode, errorCode, errors = [] }) {
     super(message);
     this.name = "BusinessError";
@@ -7,5 +7,3 @@ class BusinessError extends Error {
     this.errors = errors;
   }
 }
-
-module.exports = { BusinessError };

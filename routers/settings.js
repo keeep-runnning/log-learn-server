@@ -1,14 +1,13 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-
-const { isLoggedIn } = require("./middlewares/auth");
-const { User } = require("../models");
-const {
+import express from "express";
+import bcrypt from "bcrypt";
+import { isLoggedIn } from "./middlewares/auth.js";
+import db from "../models/index.js";
+import {
   validateUsernameUpdateRequestBody,
   validateShortIntroductionUpdateRequestBody,
   validatePasswordUpdateRequestBody,
-} = require("./middlewares/validation");
-const { BusinessError } = require("../errors/BusinessError");
+} from "./middlewares/validation.js";
+import BusinessError from "../errors/BusinessError.js";
 
 const router = express.Router();
 
@@ -16,7 +15,7 @@ router.get("/", isLoggedIn, async (req, res, next) => {
   const { id } = req.user;
 
   try {
-    const userFoundById = await User.findOne({ where: { id } });
+    const userFoundById = await db.User.findOne({ where: { id } });
     res.status(200).json({
       username: userFoundById.username,
       email: userFoundById.email,
@@ -33,7 +32,7 @@ router.patch("/username", isLoggedIn, validateUsernameUpdateRequestBody, async (
   const { username: newUsername } = req.body;
 
   try {
-    const userFoundByNewUsername = await User.findOne({ where: { username: newUsername } });
+    const userFoundByNewUsername = await db.User.findOne({ where: { username: newUsername } });
     if (userFoundByNewUsername) {
       const duplicatedUsernameError = new BusinessError({
         errorCode: "user-001",
@@ -43,7 +42,7 @@ router.patch("/username", isLoggedIn, validateUsernameUpdateRequestBody, async (
       return next(duplicatedUsernameError);
     }
 
-    const currentUser = await User.findOne({ where: { id } });
+    const currentUser = await db.User.findOne({ where: { id } });
     await currentUser.update({ username: newUsername });
     res.status(204).json({});
   } catch (error) {
@@ -60,7 +59,7 @@ router.patch(
     const { id: currentUserId } = req.user;
 
     try {
-      const currentUser = await User.findOne({ where: { id: currentUserId } });
+      const currentUser = await db.User.findOne({ where: { id: currentUserId } });
       await currentUser.update({ shortIntroduction });
       res.status(204).json({});
     } catch (error) {
@@ -74,7 +73,7 @@ router.patch("/introduction", isLoggedIn, async (req, res, next) => {
   const { id: currentUserId } = req.user;
 
   try {
-    const currentUser = await User.findOne({ where: { id: currentUserId } });
+    const currentUser = await db.User.findOne({ where: { id: currentUserId } });
     await currentUser.update({ introduction });
     res.status(204).json({});
   } catch (error) {
@@ -87,7 +86,7 @@ router.patch("/password", isLoggedIn, validatePasswordUpdateRequestBody, async (
   const { id: currentUserId } = req.user;
 
   try {
-    const currentUser = await User.findOne({ where: { id: currentUserId } });
+    const currentUser = await db.User.findOne({ where: { id: currentUserId } });
     const isPasswordValid = await bcrypt.compare(password, currentUser.password);
     if (!isPasswordValid) {
       const passwordInvalidError = new BusinessError({
@@ -106,4 +105,4 @@ router.patch("/password", isLoggedIn, validatePasswordUpdateRequestBody, async (
   }
 });
 
-module.exports = router;
+export default router;

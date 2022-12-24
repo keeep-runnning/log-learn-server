@@ -1,9 +1,10 @@
-const Sequelize = require("sequelize");
+import Sequelize from "sequelize";
+import { dbConfig } from "../config/config.js";
+import User from "./user.js";
+import Post from "./post.js";
 
 const env = process.env.NODE_ENV || "development";
-const config = require("../config/config")[env];
-const User = require("./user");
-const Post = require("./post");
+const config = dbConfig[env];
 
 const db = {};
 
@@ -20,4 +21,4 @@ Post.associate(db);
 
 db.sequelize = sequelize;
 
-module.exports = db;
+export default db;

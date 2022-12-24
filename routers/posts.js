@@ -1,14 +1,13 @@
-const express = require("express");
-const { Op } = require("sequelize");
-
-const { Post, User } = require("../models");
-const { BusinessError } = require("../errors/BusinessError");
-const { isLoggedIn } = require("./middlewares/auth");
-const {
+import express from "express";
+import { Op } from "sequelize";
+import db from "../models/index.js";
+import BusinessError from "../errors/BusinessError.js";
+import { isLoggedIn } from "./middlewares/auth.js";
+import {
   validatePostCreationRequestBody,
   validatePostUpdateRequestBody,
-} = require("./middlewares/validation");
-const { isPostAuthor } = require("./utils");
+} from "./middlewares/validation.js";
+import { isPostAuthor } from "./utils.js";
 
 const router = express.Router();
 
@@ -16,15 +15,15 @@ router.post("/", isLoggedIn, validatePostCreationRequestBody, async (req, res, n
   const { title, content } = req.body;
   const { id: authorId } = req.user;
   try {
-    const { id: postId } = await Post.create({
+    const { id: postId } = await db.Post.create({
       title,
       content,
       UserId: authorId,
     });
-    const newPost = await Post.findOne({
+    const newPost = await db.Post.findOne({
       where: { id: postId },
       include: {
-        model: User,
+        model: db.User,
         attributes: ["username"],
       },
     });
@@ -44,10 +43,10 @@ router.post("/", isLoggedIn, validatePostCreationRequestBody, async (req, res, n
 router.get("/:postId", async (req, res, next) => {
   const { postId } = req.params;
   try {
-    const post = await Post.findOne({
+    const post = await db.Post.findOne({
       where: { id: postId },
       include: {
-        model: User,
+        model: db.User,
         attributes: ["username"],
       },
     });
@@ -76,11 +75,11 @@ router.patch("/:postId", isLoggedIn, validatePostUpdateRequestBody, async (req, 
   const { postId } = req.params;
   const { title, content } = req.body;
   try {
-    const postFoundById = await Post.findOne({
+    const postFoundById = await db.Post.findOne({
       where: {
         id: postId,
       },
-      include: [{ model: User, attributes: ["id"] }],
+      include: [{ model: db.User, attributes: ["id"] }],
     });
     if (!postFoundById) {
       const postNotFoundError = new BusinessError({
@@ -110,14 +109,14 @@ router.get("/", async (req, res, next) => {
   const PAGE_SIZE = 10;
   const { cursor = "-1", authorName } = req.query;
   try {
-    const author = await User.findOne({
+    const author = await db.User.findOne({
       where: { username: authorName },
     });
     const filter = {
       where: {
         UserId: author?.id ?? "-1",
       },
-      include: [{ model: User, attributes: ["username"] }],
+      include: [{ model: db.User, attributes: ["username"] }],
       order: [["id", "DESC"]],
       limit: PAGE_SIZE,
     };
@@ -126,7 +125,7 @@ router.get("/", async (req, res, next) => {
         [Op.lt]: cursor,
       };
     }
-    const posts = await Post.findAll(filter);
+    const posts = await db.Post.findAll(filter);
     return res.json({
       posts: posts.map((post) => ({
         id: String(post.id),
@@ -146,11 +145,11 @@ router.get("/", async (req, res, next) => {
 router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   const { postId } = req.params;
   try {
-    const post = await Post.findOne({
+    const post = await db.Post.findOne({
       where: {
         id: postId,
       },
-      include: [{ model: User, attributes: ["id"] }],
+      include: [{ model: db.User, attributes: ["id"] }],
     });
     if (!post) {
       const postNotFoundError = new BusinessError({
@@ -176,4 +175,4 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;

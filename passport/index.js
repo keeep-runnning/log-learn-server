@@ -1,18 +1,17 @@
-const passport = require("passport");
+import passport from "passport";
+import local from "./localStrategy.js";
+import db from "../models/index.js";
 
-const local = require("./localStrategy");
-const { User } = require("../models");
-
-module.exports = () => {
+export default function () {
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
 
   passport.deserializeUser((userId, done) => {
-    User.findOne({ where: { id: userId } })
+    db.User.findOne({ where: { id: userId } })
       .then((user) => done(null, user))
       .catch((error) => done(error));
   });
 
   local();
-};
+}

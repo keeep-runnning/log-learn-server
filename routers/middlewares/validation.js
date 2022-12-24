@@ -1,6 +1,5 @@
-const { validationResult, body } = require("express-validator");
-
-const { BusinessError } = require("../../errors/BusinessError");
+import { validationResult, body } from "express-validator";
+import BusinessError from "../../errors/BusinessError.js";
 
 const validate = (validationMiddlewares) => [
   ...validationMiddlewares,
@@ -79,27 +78,18 @@ const validateShortIntroduction = body("shortIntroduction")
   .isLength({ max: 120 })
   .withMessage("짧은 소개는 최대 120자 까지 입력할 수 있습니다.");
 
-const validateUserCreationRequestBody = validate([
+export const validateUserCreationRequestBody = validate([
   validateUserName,
   validateUserEmail,
   validateUserPassword,
 ]);
 
-const validatePostCreationRequestBody = validate([validatePostTitle, validatePostContent]);
+export const validatePostCreationRequestBody = validate([validatePostTitle, validatePostContent]);
 
-const validatePostUpdateRequestBody = validate([validatePostTitle, validatePostContent]);
+export const validatePostUpdateRequestBody = validate([validatePostTitle, validatePostContent]);
 
-const validateUsernameUpdateRequestBody = validate([validateUserName]);
+export const validateUsernameUpdateRequestBody = validate([validateUserName]);
 
-const validateShortIntroductionUpdateRequestBody = validate([validateShortIntroduction]);
+export const validateShortIntroductionUpdateRequestBody = validate([validateShortIntroduction]);
 
-const validatePasswordUpdateRequestBody = validate([validateUserNewPassword]);
-
-module.exports = {
-  validateUserCreationRequestBody,
-  validatePostCreationRequestBody,
-  validatePostUpdateRequestBody,
-  validateUsernameUpdateRequestBody,
-  validateShortIntroductionUpdateRequestBody,
-  validatePasswordUpdateRequestBody,
-};
+export const validatePasswordUpdateRequestBody = validate([validateUserNewPassword]);

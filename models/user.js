@@ -1,6 +1,6 @@
-const { Model, DataTypes } = require("sequelize");
+import { Model, DataTypes } from "sequelize";
 
-module.exports = class User extends Model {
+export default class User extends Model {
   static init(sequelize) {
     return super.init(
       {
@@ -42,4 +42,4 @@ module.exports = class User extends Model {
   static associate(db) {
     db.User.hasMany(db.Post);
   }
-};
+}

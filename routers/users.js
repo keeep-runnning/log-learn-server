@@ -1,16 +1,15 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-
-const { User } = require("../models");
-const { validateUserCreationRequestBody } = require("./middlewares/validation");
-const { BusinessError } = require("../errors/BusinessError");
+import express from "express";
+import bcrypt from "bcrypt";
+import db from "../models/index.js";
+import { validateUserCreationRequestBody } from "./middlewares/validation.js";
+import BusinessError from "../errors/BusinessError.js";
 
 const router = express.Router();
 
 router.post("/", validateUserCreationRequestBody, async (req, res, next) => {
   const { username, email, password: rawPassword } = req.body;
   try {
-    const userFoundByUsername = await User.findOne({ where: { username } });
+    const userFoundByUsername = await db.User.findOne({ where: { username } });
     if (userFoundByUsername) {
       const duplicatedUsernameError = new BusinessError({
         errorCode: "user-001",
@@ -19,7 +18,7 @@ router.post("/", validateUserCreationRequestBody, async (req, res, next) => {
       });
       return next(duplicatedUsernameError);
     }
-    const userFoundByEmail = await User.findOne({ where: { email } });
+    const userFoundByEmail = await db.User.findOne({ where: { email } });
     if (userFoundByEmail) {
       const duplicatedEmailError = new BusinessError({
         errorCode: "user-002",
@@ -29,7 +28,7 @@ router.post("/", validateUserCreationRequestBody, async (req, res, next) => {
       return next(duplicatedEmailError);
     }
     const hashedPassword = await bcrypt.hash(rawPassword, 10);
-    await User.create({ username, email, password: hashedPassword });
+    await db.User.create({ username, email, password: hashedPassword });
     res.status(200).send();
   } catch (error) {
     console.error(error);
@@ -41,7 +40,7 @@ router.get("/:username", async (req, res, next) => {
   const { username } = req.params;
 
   try {
-    const userFoundByUsername = await User.findOne({ where: { username } });
+    const userFoundByUsername = await db.User.findOne({ where: { username } });
 
     if (!userFoundByUsername) {
       const userNotFoundError = new BusinessError({
@@ -63,4 +62,4 @@ router.get("/:username", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;
