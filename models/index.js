@@ -1,14 +1,12 @@
 import Sequelize from "sequelize";
-import { dbConfig } from "../config/config.js";
+
+import config from "../config.js";
 import User from "./user.js";
 import Post from "./post.js";
 
-const env = process.env.NODE_ENV || "development";
-const config = dbConfig[env];
-
 const db = {};
 
-const sequelize = new Sequelize(config.database, config.username, config.password, config);
+const sequelize = new Sequelize(config.db.url);
 
 User.init(sequelize);
 Post.init(sequelize);

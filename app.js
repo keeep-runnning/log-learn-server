@@ -3,11 +3,13 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
-import dotenv from "dotenv";
 import cors from "cors";
+
 import db from "./models/index.js";
 import BusinessError from "./errors/BusinessError.js";
 import passportConfig from "./passport/index.js";
+import config from "./config.js";
+
 import usersRouter from "./routers/users.js";
 import authRouter from "./routers/auth.js";
 import postsRouter from "./routers/posts.js";
@@ -15,10 +17,7 @@ import settingsRouter from "./routers/settings.js";
 
 const app = express();
 
-dotenv.config();
 passportConfig();
-
-app.set("port", process.env.PORT || 8080);
 
 db.sequelize
   .sync({ force: false })
@@ -27,18 +26,18 @@ db.sequelize
 
 app.use(
   cors({
-    origin: true,
-    credentials: true,
+    origin: config.cors.origin,
+    credentials: config.cors.credentials,
   })
 );
-app.use(morgan("dev"));
+app.use(morgan(config.morgan.format));
 app.use(express.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(config.cookie.secret));
 app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
+    secret: config.cookie.secret,
     cookie: {
       httpOnly: true,
       secure: false,
@@ -78,6 +77,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(app.get("port"), () => {
-  console.log(`server is running on ${app.get("port")}...`);
+app.listen(config.host.port, () => {
+  console.log(`log-learn server is ready on ${config.host.port} port`);
 });
