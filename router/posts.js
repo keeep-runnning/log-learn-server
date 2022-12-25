@@ -18,6 +18,6 @@ router.patch(
   validatePostUpdateRequestBody,
   postsController.updatePost
 );
-router.delete("/:postId", isAuthenticated, postsController.deletePost);
+router.delete("/:postId", isAuthenticated, postsController.removePost);
 
 export default router;

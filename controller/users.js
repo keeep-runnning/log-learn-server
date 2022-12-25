@@ -1,12 +1,12 @@
 import * as bcrypt from "bcrypt";
 
-import db from "../models/index.js";
 import BusinessError from "../errors/BusinessError.js";
+import * as usersRepository from "../repository/users.js";
 
 export async function createUser(req, res, next) {
   const { username, email, password: rawPassword } = req.body;
   try {
-    const userFoundByUsername = await db.User.findOne({ where: { username } });
+    const userFoundByUsername = await usersRepository.findByUsername(username);
     if (userFoundByUsername) {
       const duplicatedUsernameError = new BusinessError({
         errorCode: "user-001",
@@ -15,7 +15,7 @@ export async function createUser(req, res, next) {
       });
       return next(duplicatedUsernameError);
     }
-    const userFoundByEmail = await db.User.findOne({ where: { email } });
+    const userFoundByEmail = await usersRepository.findByEmail(email);
     if (userFoundByEmail) {
       const duplicatedEmailError = new BusinessError({
         errorCode: "user-002",
@@ -25,7 +25,7 @@ export async function createUser(req, res, next) {
       return next(duplicatedEmailError);
     }
     const hashedPassword = await bcrypt.hash(rawPassword, 10);
-    await db.User.create({ username, email, password: hashedPassword });
+    await usersRepository.create({ username, email, password: hashedPassword });
     res.status(200).send();
   } catch (error) {
     console.error(error);
@@ -37,7 +37,7 @@ export async function getUserByUsername(req, res, next) {
   const { username } = req.params;
 
   try {
-    const userFoundByUsername = await db.User.findOne({ where: { username } });
+    const userFoundByUsername = await usersRepository.findByUsername(username);
 
     if (!userFoundByUsername) {
       const userNotFoundError = new BusinessError({
