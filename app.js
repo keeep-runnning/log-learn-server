@@ -10,10 +10,10 @@ import BusinessError from "./errors/BusinessError.js";
 import passportConfig from "./passport/index.js";
 import config from "./config.js";
 
-import usersRouter from "./routers/users.js";
-import authRouter from "./routers/auth.js";
-import postsRouter from "./routers/posts.js";
-import settingsRouter from "./routers/settings.js";
+import usersRouter from "./router/users.js";
+import authRouter from "./router/auth.js";
+import postsRouter from "./router/posts.js";
+import settingsRouter from "./router/settings.js";
 
 const app = express();
 
