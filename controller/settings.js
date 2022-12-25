@@ -1,17 +1,9 @@
-import express from "express";
-import bcrypt from "bcrypt";
-import { isLoggedIn } from "./middlewares/auth.js";
+import * as bcrypt from "bcrypt";
+
 import db from "../models/index.js";
-import {
-  validateUsernameUpdateRequestBody,
-  validateShortIntroductionUpdateRequestBody,
-  validatePasswordUpdateRequestBody,
-} from "./middlewares/validation.js";
 import BusinessError from "../errors/BusinessError.js";
 
-const router = express.Router();
-
-router.get("/", isLoggedIn, async (req, res, next) => {
+export async function getSettings(req, res, next) {
   const { id } = req.user;
 
   try {
@@ -25,9 +17,9 @@ router.get("/", isLoggedIn, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}
 
-router.patch("/username", isLoggedIn, validateUsernameUpdateRequestBody, async (req, res, next) => {
+export async function setUsername(req, res, next) {
   const { id } = req.user;
   const { username: newUsername } = req.body;
 
@@ -48,27 +40,22 @@ router.patch("/username", isLoggedIn, validateUsernameUpdateRequestBody, async (
   } catch (error) {
     next(error);
   }
-});
+}
 
-router.patch(
-  "/short-introduction",
-  isLoggedIn,
-  validateShortIntroductionUpdateRequestBody,
-  async (req, res, next) => {
-    const { shortIntroduction } = req.body;
-    const { id: currentUserId } = req.user;
+export async function setShortIntroduction(req, res, next) {
+  const { shortIntroduction } = req.body;
+  const { id: currentUserId } = req.user;
 
-    try {
-      const currentUser = await db.User.findOne({ where: { id: currentUserId } });
-      await currentUser.update({ shortIntroduction });
-      res.status(204).json({});
-    } catch (error) {
-      next(error);
-    }
+  try {
+    const currentUser = await db.User.findOne({ where: { id: currentUserId } });
+    await currentUser.update({ shortIntroduction });
+    res.status(204).json({});
+  } catch (error) {
+    next(error);
   }
-);
+}
 
-router.patch("/introduction", isLoggedIn, async (req, res, next) => {
+export async function setIntroduction(req, res, next) {
   const { introduction } = req.body;
   const { id: currentUserId } = req.user;
 
@@ -79,9 +66,9 @@ router.patch("/introduction", isLoggedIn, async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-});
+}
 
-router.patch("/password", isLoggedIn, validatePasswordUpdateRequestBody, async (req, res, next) => {
+export async function setPassword(req, res, next) {
   const { password, newPassword } = req.body;
   const { id: currentUserId } = req.user;
 
@@ -103,6 +90,4 @@ router.patch("/password", isLoggedIn, validatePasswordUpdateRequestBody, async (
   } catch (error) {
     next(error);
   }
-});
-
-export default router;
+}

@@ -1,9 +1,6 @@
-import express from "express";
 import passport from "passport";
 
-const router = express.Router();
-
-router.post("/login", (req, res, next) => {
+export function login(req, res, next) {
   passport.authenticate("local", (authError, user) => {
     if (authError) {
       console.error(authError);
@@ -20,21 +17,19 @@ router.post("/login", (req, res, next) => {
       });
     });
   })(req, res, next);
-});
+}
 
-router.get("/current-user", (req, res) => {
+export function getCurrentUser(req, res) {
   return res.status(200).json({
     isLoggedIn: Boolean(req.user),
     username: req.user?.username ?? "",
   });
-});
+}
 
-router.post("/logout", (req, res, next) => {
+export function logout(req, res, next) {
   req.logout((err) => {
     if (err) return next(err);
     req.session.destroy();
     res.status(200).send();
   });
-});
-
-export default router;
+}

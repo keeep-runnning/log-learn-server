@@ -1,17 +1,16 @@
-import express from "express";
 import { Op } from "sequelize";
+
 import db from "../models/index.js";
 import BusinessError from "../errors/BusinessError.js";
-import { isLoggedIn } from "./middlewares/auth.js";
-import {
-  validatePostCreationRequestBody,
-  validatePostUpdateRequestBody,
-} from "./middlewares/validation.js";
-import { isPostAuthor } from "./utils.js";
 
-const router = express.Router();
+function isPostAuthor(user, post) {
+  if (!user || !post) {
+    return false;
+  }
+  return user.id === post.User.id;
+}
 
-router.post("/", isLoggedIn, validatePostCreationRequestBody, async (req, res, next) => {
+export async function createPost(req, res, next) {
   const { title, content } = req.body;
   const { id: authorId } = req.user;
   try {
@@ -38,9 +37,9 @@ router.post("/", isLoggedIn, validatePostCreationRequestBody, async (req, res, n
     console.error(error);
     next(error);
   }
-});
+}
 
-router.get("/:postId", async (req, res, next) => {
+export async function getPostById(req, res, next) {
   const { postId } = req.params;
   try {
     const post = await db.Post.findOne({
@@ -69,9 +68,9 @@ router.get("/:postId", async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
+}
 
-router.patch("/:postId", isLoggedIn, validatePostUpdateRequestBody, async (req, res, next) => {
+export async function updatePost(req, res, next) {
   const { postId } = req.params;
   const { title, content } = req.body;
   try {
@@ -103,9 +102,9 @@ router.patch("/:postId", isLoggedIn, validatePostUpdateRequestBody, async (req, 
     console.error(error);
     next(error);
   }
-});
+}
 
-router.get("/", async (req, res, next) => {
+export async function getPostsByAuthorName(req, res, next) {
   const PAGE_SIZE = 10;
   const { cursor = "-1", authorName } = req.query;
   try {
@@ -140,9 +139,9 @@ router.get("/", async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
+}
 
-router.delete("/:postId", isLoggedIn, async (req, res, next) => {
+export async function deletePost(req, res, next) {
   const { postId } = req.params;
   try {
     const post = await db.Post.findOne({
@@ -173,6 +172,4 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
-
-export default router;
+}

@@ -1,26 +1,29 @@
 import { validationResult, body } from "express-validator";
-import BusinessError from "../../errors/BusinessError.js";
 
-const validate = (validationMiddlewares) => [
-  ...validationMiddlewares,
-  (req, res, next) => {
-    const validationErrors = validationResult(req);
-    if (!validationErrors.isEmpty()) {
-      const inValidError = new BusinessError({
-        message: "올바르지 않은 요청입니다.",
-        statusCode: 400,
-        errorCode: "common-001",
-        errors: validationErrors.array().map(({ param, value, msg }) => ({
-          field: param,
-          value: value ?? "",
-          reason: msg,
-        })),
-      });
-      return next(inValidError);
-    }
-    next();
-  },
-];
+import BusinessError from "../errors/BusinessError.js";
+
+function validate(validationMiddlewares) {
+  return [
+    ...validationMiddlewares,
+    (req, res, next) => {
+      const validationErrors = validationResult(req);
+      if (!validationErrors.isEmpty()) {
+        const inValidError = new BusinessError({
+          message: "올바르지 않은 요청입니다.",
+          statusCode: 400,
+          errorCode: "common-001",
+          errors: validationErrors.array().map(({ param, value, msg }) => ({
+            field: param,
+            value: value ?? "",
+            reason: msg,
+          })),
+        });
+        return next(inValidError);
+      }
+      next();
+    },
+  ];
+}
 
 const validateUserName = body("username")
   .notEmpty()

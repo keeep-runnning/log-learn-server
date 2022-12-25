@@ -1,12 +1,9 @@
-import express from "express";
-import bcrypt from "bcrypt";
+import * as bcrypt from "bcrypt";
+
 import db from "../models/index.js";
-import { validateUserCreationRequestBody } from "./middlewares/validation.js";
 import BusinessError from "../errors/BusinessError.js";
 
-const router = express.Router();
-
-router.post("/", validateUserCreationRequestBody, async (req, res, next) => {
+export async function createUser(req, res, next) {
   const { username, email, password: rawPassword } = req.body;
   try {
     const userFoundByUsername = await db.User.findOne({ where: { username } });
@@ -34,9 +31,9 @@ router.post("/", validateUserCreationRequestBody, async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
+}
 
-router.get("/:username", async (req, res, next) => {
+export async function getUserByUsername(req, res, next) {
   const { username } = req.params;
 
   try {
@@ -60,6 +57,4 @@ router.get("/:username", async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
-
-export default router;
+}

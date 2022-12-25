@@ -1,6 +1,6 @@
-import BusinessError from "../../errors/BusinessError.js";
+import BusinessError from "../errors/BusinessError.js";
 
-export const isLoggedIn = (req, res, next) => {
+export function isAuthenticated(req, res, next) {
   if (!req.isAuthenticated()) {
     const notLoggedInError = new BusinessError({
       errorCode: "common-002",
@@ -10,4 +10,4 @@ export const isLoggedIn = (req, res, next) => {
     return next(notLoggedInError);
   }
   next();
-};
+}
