@@ -1,4 +1,5 @@
 import express from "express";
+import "express-async-errors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import session from "express-session";
