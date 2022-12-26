@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 
+import config from "../config.js";
 import BusinessError from "../errors/BusinessError.js";
 import * as usersRepository from "../repository/users.js";
 
@@ -63,7 +64,7 @@ export async function setPassword(req, res) {
     });
   }
 
-  const newHashedPassword = await bcrypt.hash(newPassword, 10);
+  const newHashedPassword = await bcrypt.hash(newPassword, config.bcrypt.saltRounds);
   await usersRepository.updatePassword({ id: currentUserId, newPassword: newHashedPassword });
   res.status(204).json({});
 }

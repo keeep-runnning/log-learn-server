@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 
+import config from "../config.js";
 import BusinessError from "../errors/BusinessError.js";
 import * as usersRepository from "../repository/users.js";
 
@@ -24,7 +25,7 @@ export async function createUser(req, res) {
     });
   }
 
-  const hashedPassword = await bcrypt.hash(rawPassword, 10);
+  const hashedPassword = await bcrypt.hash(rawPassword, config.bcrypt.saltRounds);
   await usersRepository.create({ username, email, password: hashedPassword });
 
   res.status(200).send();
