@@ -6,7 +6,6 @@ import session from "express-session";
 import passport from "passport";
 import cors from "cors";
 
-import db from "./models/index.js";
 import BusinessError from "./errors/BusinessError.js";
 import passportConfig from "./passport/index.js";
 import config from "./config.js";
@@ -19,11 +18,6 @@ import settingsRouter from "./router/settings.js";
 const app = express();
 
 passportConfig();
-
-db.sequelize
-  .sync({ force: false })
-  .then(() => console.log("database is connected..."))
-  .catch((error) => console.error(error));
 
 app.use(
   cors({
