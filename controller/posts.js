@@ -5,7 +5,7 @@ function isPostAuthor(user, post) {
   if (!user || !post) {
     return false;
   }
-  return user.id === post.User.id;
+  return user.id === post.authorId;
 }
 
 export async function createPost(req, res) {
@@ -16,13 +16,13 @@ export async function createPost(req, res) {
     id: String(newPost.id),
     title: newPost.title,
     content: newPost.content,
-    author: newPost.User.username,
-    createdAt: newPost.createdAt.toISOString(),
+    author: newPost.author.username,
+    createdAt: newPost.createdAt,
   });
 }
 
 export async function getPostById(req, res) {
-  const { postId } = req.params;
+  const postId = Number(req.params.postId);
   const post = await postsRepository.findById(postId);
   if (!post) {
     throw new BusinessError({
@@ -35,13 +35,13 @@ export async function getPostById(req, res) {
     id: String(post.id),
     title: post.title,
     content: post.content,
-    author: post.User.username,
-    createdAt: post.createdAt.toISOString(),
+    author: post.author.username,
+    createdAt: post.createdAt,
   });
 }
 
 export async function updatePost(req, res) {
-  const { postId } = req.params;
+  const postId = Number(req.params.postId);
   const { title, content } = req.body;
   const post = await postsRepository.findById(postId);
   if (!post) {
@@ -85,7 +85,7 @@ export async function getPostsByAuthorName(req, res) {
 }
 
 export async function removePost(req, res) {
-  const { postId } = req.params;
+  const postId = Number(req.params.postId);
   const post = await postsRepository.findById(postId);
   if (!post) {
     throw new BusinessError({
