@@ -5,15 +5,15 @@
 ## 기술 스택
 
 <div>
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black" />
-  <img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
+  <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=node.js&logoColor=white" />
 </div>
 <div>
-  <img src="https://img.shields.io/badge/express-000000?style=flat&logo=express&logoColor=white" />
+  <img src="https://img.shields.io/badge/express-000000?style=flat-square&logo=express&logoColor=white" />
 </div>
 <div>
-  <img src="https://img.shields.io/badge/mysql-4479A1?style=flat&logo=mysql&logoColor=white" />
-  <img src="https://img.shields.io/badge/prisma-2D3748?style=flat&logo=prisma&logoColor=white" />
+  <img src="https://img.shields.io/badge/mysql-4479A1?style=flat-square&logo=mysql&logoColor=white" />
+  <img src="https://img.shields.io/badge/prisma-2D3748?style=flat-square&logo=prisma&logoColor=white" />
 </div>
 
 ## 주요 기능
