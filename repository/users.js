@@ -1,37 +1,55 @@
-import db from "../models/index.js";
+import db from "../db.js";
 
 export async function findById(id) {
-  return await db.User.findOne({ where: { id } });
+  return await db.user.findUnique({ where: { id } });
 }
 
 export async function findByUsername(username) {
-  return await db.User.findOne({ where: { username } });
+  return await db.user.findUnique({ where: { username } });
 }
 
 export async function findByEmail(email) {
-  return await db.User.findOne({ where: { email } });
+  return await db.user.findUnique({ where: { email } });
 }
 
 export async function create({ username, email, password }) {
-  await db.User.create({ username, email, password });
+  await db.user.create({
+    data: { username, email, password },
+  });
 }
 
 export async function updateUsername({ id, newUsername }) {
-  const user = await findById(id);
-  await user.update({ username: newUsername });
+  await db.user.update({
+    where: { id },
+    data: {
+      username: newUsername,
+    },
+  });
 }
 
 export async function updateShortIntroduction({ id, newShortIntroduction }) {
-  const user = await findById(id);
-  await user.update({ shortIntroduction: newShortIntroduction });
+  await db.user.update({
+    where: { id },
+    data: {
+      shortIntroduction: newShortIntroduction,
+    },
+  });
 }
 
 export async function updateIntroduction({ id, newIntroduction }) {
-  const user = await findById(id);
-  await user.update({ introduction: newIntroduction });
+  await db.user.update({
+    where: { id },
+    data: {
+      introduction: newIntroduction,
+    },
+  });
 }
 
 export async function updatePassword({ id, newPassword }) {
-  const user = await findById(id);
-  await user.update({ password: newPassword });
+  await db.user.update({
+    where: { id },
+    data: {
+      password: newPassword,
+    },
+  });
 }

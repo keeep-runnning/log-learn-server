@@ -1,60 +1,76 @@
-import { Op } from "sequelize";
-
-import db from "../models/index.js";
+import db from "../db.js";
 
 export async function create({ title, content, authorId }) {
-  const { id: postId } = await db.Post.create({
-    title,
-    content,
-    UserId: authorId,
-  });
-  const newPost = await db.Post.findOne({
-    where: { id: postId },
+  return await db.post.create({
+    data: {
+      title,
+      content,
+      authorId,
+    },
     include: {
-      model: db.User,
-      attributes: ["username"],
+      author: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
-
-  return newPost;
 }
 
 export async function findById(id) {
-  return await db.Post.findOne({
+  return await db.post.findUnique({
     where: { id },
     include: {
-      model: db.User,
-      attributes: ["id", "username"],
+      author: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
 }
 
-export async function findPageByAuthorName({ authorName = null, cursor = "-1", pageSize = 10 }) {
-  const author = await db.User.findOne({
-    where: { username: authorName },
-  });
+export async function findPageByAuthorName({ authorName, cursor, pageSize }) {
+  const isNotFirstPage = cursor !== -1;
+
   const filter = {
+    take: pageSize,
     where: {
-      UserId: author?.id ?? "-1",
+      author: {
+        username: authorName,
+      },
     },
-    include: [{ model: db.User, attributes: ["username"] }],
-    order: [["id", "DESC"]],
-    limit: pageSize,
+    orderBy: {
+      id: "desc",
+    },
+    include: {
+      author: {
+        select: {
+          username: true,
+        },
+      },
+    },
   };
-  if (cursor !== "-1") {
-    filter.where.id = {
-      [Op.lt]: cursor,
+
+  if (isNotFirstPage) {
+    filter.skip = 1;
+    filter.cursor = {
+      id: cursor,
     };
   }
-  return await db.Post.findAll(filter);
+
+  return await db.post.findMany(filter);
 }
 
 export async function update({ id, title, content }) {
-  const post = await findById(id);
-  await post.update({ title, content });
+  await db.post.update({
+    where: { id },
+    data: { title, content },
+  });
 }
 
 export async function remove(id) {
-  const post = await findById(id);
-  await post.destroy();
+  await db.post.delete({
+    where: { id },
+  });
 }

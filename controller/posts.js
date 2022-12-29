@@ -5,7 +5,7 @@ function isPostAuthor(user, post) {
   if (!user || !post) {
     return false;
   }
-  return user.id === post.User.id;
+  return user.id === post.authorId;
 }
 
 export async function createPost(req, res) {
@@ -16,13 +16,13 @@ export async function createPost(req, res) {
     id: String(newPost.id),
     title: newPost.title,
     content: newPost.content,
-    author: newPost.User.username,
-    createdAt: newPost.createdAt.toISOString(),
+    author: newPost.author.username,
+    createdAt: newPost.createdAt,
   });
 }
 
 export async function getPostById(req, res) {
-  const { postId } = req.params;
+  const postId = Number(req.params.postId);
   const post = await postsRepository.findById(postId);
   if (!post) {
     throw new BusinessError({
@@ -35,13 +35,13 @@ export async function getPostById(req, res) {
     id: String(post.id),
     title: post.title,
     content: post.content,
-    author: post.User.username,
-    createdAt: post.createdAt.toISOString(),
+    author: post.author.username,
+    createdAt: post.createdAt,
   });
 }
 
 export async function updatePost(req, res) {
-  const { postId } = req.params;
+  const postId = Number(req.params.postId);
   const { title, content } = req.body;
   const post = await postsRepository.findById(postId);
   if (!post) {
@@ -64,7 +64,9 @@ export async function updatePost(req, res) {
 
 export async function getPostsByAuthorName(req, res) {
   const PAGE_SIZE = 10;
-  const { cursor, authorName } = req.query;
+  let cursor = Number(req.query.cursor);
+  if (Number.isNaN(cursor)) cursor = -1;
+  const authorName = req.query.authorName ?? "";
 
   const posts = await postsRepository.findPageByAuthorName({
     authorName,
@@ -75,17 +77,17 @@ export async function getPostsByAuthorName(req, res) {
   res.json({
     posts: posts.map((post) => ({
       id: String(post.id),
-      author: post.User.username,
+      author: post.author.username,
       title: post.title,
       content: post.content,
-      createdAt: post.createdAt.toISOString(),
+      createdAt: post.createdAt,
     })),
     nextCursor: posts.length === PAGE_SIZE ? String(posts[posts.length - 1].id) : null,
   });
 }
 
 export async function removePost(req, res) {
-  const { postId } = req.params;
+  const postId = Number(req.params.postId);
   const post = await postsRepository.findById(postId);
   if (!post) {
     throw new BusinessError({

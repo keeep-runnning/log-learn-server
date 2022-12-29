@@ -3,9 +3,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config = {
-  db: {
-    url: getEnvOrDefaultValue("DB_URL"),
-  },
   cookie: {
     secret: getEnvOrDefaultValue("COOKIE_SECRET"),
   },

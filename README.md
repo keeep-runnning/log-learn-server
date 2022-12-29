@@ -13,7 +13,7 @@
 </div>
 <div>
   <img src="https://img.shields.io/badge/mysql-4479A1?style=flat&logo=mysql&logoColor=white" />
-  <img src="https://img.shields.io/badge/sequelize-52B0E7?style=flat&logo=sequelize&logoColor=white" />
+  <img src="https://img.shields.io/badge/prisma-2D3748?style=flat&logo=prisma&logoColor=white" />
 </div>
 
 ## 주요 기능

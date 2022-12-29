@@ -1,6 +1,6 @@
 import passport from "passport";
 import local from "./localStrategy.js";
-import db from "../models/index.js";
+import * as usersRepository from "../repository/users.js";
 
 export default function () {
   passport.serializeUser((user, done) => {
@@ -8,7 +8,8 @@ export default function () {
   });
 
   passport.deserializeUser((userId, done) => {
-    db.User.findOne({ where: { id: userId } })
+    usersRepository
+      .findById(userId)
       .then((user) => done(null, user))
       .catch((error) => done(error));
   });
