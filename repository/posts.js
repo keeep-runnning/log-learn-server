@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import db from "../db.js";
 
 export async function create({ title, content, authorId }) {
@@ -31,25 +30,36 @@ export async function findById(id) {
   });
 }
 
-export async function findPageByAuthorName({ authorName = null, cursor = "-1", pageSize = 10 }) {
-  // const author = await db.User.findOne({
-  //   where: { username: authorName },
-  // });
-  // const filter = {
-  //   where: {
-  //     UserId: author?.id ?? "-1",
-  //   },
-  //   include: [{ model: db.User, attributes: ["username"] }],
-  //   order: [["id", "DESC"]],
-  //   limit: pageSize,
-  // };
-  // if (cursor !== "-1") {
-  //   filter.where.id = {
-  //     [Op.lt]: cursor,
-  //   };
-  // }
-  // return await db.Post.findAll(filter);
-  return [];
+export async function findPageByAuthorName({ authorName, cursor, pageSize }) {
+  const isNotFirstPage = cursor !== -1;
+
+  const filter = {
+    take: pageSize,
+    where: {
+      author: {
+        username: authorName,
+      },
+    },
+    orderBy: {
+      id: "desc",
+    },
+    include: {
+      author: {
+        select: {
+          username: true,
+        },
+      },
+    },
+  };
+
+  if (isNotFirstPage) {
+    filter.skip = 1;
+    filter.cursor = {
+      id: cursor,
+    };
+  }
+
+  return await db.post.findMany(filter);
 }
 
 export async function update({ id, title, content }) {

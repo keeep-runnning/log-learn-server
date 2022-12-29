@@ -64,7 +64,9 @@ export async function updatePost(req, res) {
 
 export async function getPostsByAuthorName(req, res) {
   const PAGE_SIZE = 10;
-  const { cursor, authorName } = req.query;
+  let cursor = Number(req.query.cursor);
+  if (Number.isNaN(cursor)) cursor = -1;
+  const authorName = req.query.authorName ?? "";
 
   const posts = await postsRepository.findPageByAuthorName({
     authorName,
@@ -75,10 +77,10 @@ export async function getPostsByAuthorName(req, res) {
   res.json({
     posts: posts.map((post) => ({
       id: String(post.id),
-      author: post.User.username,
+      author: post.author.username,
       title: post.title,
       content: post.content,
-      createdAt: post.createdAt.toISOString(),
+      createdAt: post.createdAt,
     })),
     nextCursor: posts.length === PAGE_SIZE ? String(posts[posts.length - 1].id) : null,
   });
