@@ -1,7 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 
-import * as usersController from "../controller/users.js";
+import * as userController from "../controller/user.js";
 import validate from "../middleware/validate.js";
 
 const router = express.Router();
@@ -33,9 +33,9 @@ router.post(
     .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
     .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요."),
   validate,
-  usersController.createUser
+  userController.createUser
 );
 
-router.get("/:username", usersController.getUserByUsername);
+router.get("/:username", userController.getUserByUsername);
 
 export default router;

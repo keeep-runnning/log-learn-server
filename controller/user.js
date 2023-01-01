@@ -2,12 +2,12 @@ import * as bcrypt from "bcrypt";
 
 import config from "../config.js";
 import BusinessError from "../errors/BusinessError.js";
-import * as usersRepository from "../repository/users.js";
+import * as userRepository from "../repository/user.js";
 
 export async function createUser(req, res) {
   const { username, email, password: rawPassword } = req.body;
 
-  const userFoundByUsername = await usersRepository.findByUsername(username);
+  const userFoundByUsername = await userRepository.findByUsername(username);
   if (userFoundByUsername) {
     throw new BusinessError({
       errorCode: "user-001",
@@ -16,7 +16,7 @@ export async function createUser(req, res) {
     });
   }
 
-  const userFoundByEmail = await usersRepository.findByEmail(email);
+  const userFoundByEmail = await userRepository.findByEmail(email);
   if (userFoundByEmail) {
     throw new BusinessError({
       errorCode: "user-002",
@@ -26,7 +26,7 @@ export async function createUser(req, res) {
   }
 
   const hashedPassword = await bcrypt.hash(rawPassword, config.bcrypt.saltRounds);
-  await usersRepository.create({ username, email, password: hashedPassword });
+  await userRepository.create({ username, email, password: hashedPassword });
 
   res.status(200).send();
 }
@@ -34,7 +34,7 @@ export async function createUser(req, res) {
 export async function getUserByUsername(req, res) {
   const { username } = req.params;
 
-  const userFoundByUsername = await usersRepository.findByUsername(username);
+  const userFoundByUsername = await userRepository.findByUsername(username);
 
   if (!userFoundByUsername) {
     throw new BusinessError({

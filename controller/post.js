@@ -1,5 +1,5 @@
 import BusinessError from "../errors/BusinessError.js";
-import * as postsRepository from "../repository/posts.js";
+import * as postRepository from "../repository/post.js";
 
 function isPostAuthor(user, post) {
   if (!user || !post) {
@@ -11,7 +11,7 @@ function isPostAuthor(user, post) {
 export async function createPost(req, res) {
   const { title, content } = req.body;
   const { id: authorId } = req.user;
-  const newPost = await postsRepository.create({ title, content, authorId });
+  const newPost = await postRepository.create({ title, content, authorId });
   res.status(201).json({
     id: String(newPost.id),
     title: newPost.title,
@@ -23,7 +23,7 @@ export async function createPost(req, res) {
 
 export async function getPostById(req, res) {
   const postId = Number(req.params.postId);
-  const post = await postsRepository.findById(postId);
+  const post = await postRepository.findById(postId);
   if (!post) {
     throw new BusinessError({
       errorCode: "post-001",
@@ -43,7 +43,7 @@ export async function getPostById(req, res) {
 export async function updatePost(req, res) {
   const postId = Number(req.params.postId);
   const { title, content } = req.body;
-  const post = await postsRepository.findById(postId);
+  const post = await postRepository.findById(postId);
   if (!post) {
     throw new BusinessError({
       message: "블로그 포스트가 없습니다.",
@@ -58,7 +58,7 @@ export async function updatePost(req, res) {
       errorCode: "common-003",
     });
   }
-  await postsRepository.update({ id: postId, title, content });
+  await postRepository.update({ id: postId, title, content });
   res.status(204).json();
 }
 
@@ -68,7 +68,7 @@ export async function getPostsByAuthorName(req, res) {
   if (Number.isNaN(cursor)) cursor = -1;
   const authorName = req.query.authorName ?? "";
 
-  const posts = await postsRepository.findPageByAuthorName({
+  const posts = await postRepository.findPageByAuthorName({
     authorName,
     cursor,
     pageSize: PAGE_SIZE,
@@ -88,7 +88,7 @@ export async function getPostsByAuthorName(req, res) {
 
 export async function removePost(req, res) {
   const postId = Number(req.params.postId);
-  const post = await postsRepository.findById(postId);
+  const post = await postRepository.findById(postId);
   if (!post) {
     throw new BusinessError({
       message: "블로그 포스트가 없습니다.",
@@ -103,6 +103,6 @@ export async function removePost(req, res) {
       errorCode: "common-003",
     });
   }
-  await postsRepository.remove(postId);
+  await postRepository.remove(postId);
   res.status(204).json();
 }

@@ -10,10 +10,10 @@ import BusinessError from "./errors/BusinessError.js";
 import passportConfig from "./passport/index.js";
 import config from "./config.js";
 
-import usersRouter from "./router/users.js";
+import userRouter from "./router/user.js";
 import authRouter from "./router/auth.js";
-import postsRouter from "./router/posts.js";
-import settingsRouter from "./router/settings.js";
+import postRouter from "./router/post.js";
+import settingRouter from "./router/setting.js";
 
 const app = express();
 
@@ -42,10 +42,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/users", usersRouter);
+app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/posts", postsRouter);
-app.use("/api/settings", settingsRouter);
+app.use("/api/posts", postRouter);
+app.use("/api/settings", settingRouter);
 
 app.use((req, res, next) => {
   const notFoundError = new BusinessError({

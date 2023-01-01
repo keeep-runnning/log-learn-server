@@ -1,7 +1,8 @@
 import passport from "passport";
 import bcrypt from "bcrypt";
 import passportLocal from "passport-local";
-import * as usersRepository from "../repository/users.js";
+
+import * as userRepository from "../repository/user.js";
 import BusinessError from "../errors/BusinessError.js";
 
 const LocalStrategy = passportLocal.Strategy;
@@ -15,7 +16,7 @@ export default function () {
       },
       async (email, password, done) => {
         try {
-          const userFoundByEmail = await usersRepository.findByEmail(email);
+          const userFoundByEmail = await userRepository.findByEmail(email);
           if (userFoundByEmail) {
             const isPasswordValid = await bcrypt.compare(password, userFoundByEmail.password);
             if (isPasswordValid) {

@@ -1,15 +1,15 @@
 import express from "express";
 import { body } from "express-validator";
 
-import * as postsController from "../controller/posts.js";
+import * as postController from "../controller/post.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 import validate from "../middleware/validate.js";
 
 const router = express.Router();
 
-router.get("/:postId", postsController.getPostById);
+router.get("/:postId", postController.getPostById);
 
-router.get("/", postsController.getPostsByAuthorName);
+router.get("/", postController.getPostsByAuthorName);
 
 router.post(
   "/",
@@ -23,7 +23,7 @@ router.post(
     .withMessage("블로그 포스트 제목은 최대 100자까지 입력할 수 있습니다."),
   body("content").trim().notEmpty().withMessage("블로그 포스트 내용을 입력해주세요."),
   validate,
-  postsController.createPost
+  postController.createPost
 );
 
 router.patch(
@@ -38,9 +38,9 @@ router.patch(
     .withMessage("블로그 포스트 제목은 최대 100자까지 입력할 수 있습니다."),
   body("content").trim().notEmpty().withMessage("블로그 포스트 내용을 입력해주세요."),
   validate,
-  postsController.updatePost
+  postController.updatePost
 );
 
-router.delete("/:postId", isAuthenticated, postsController.removePost);
+router.delete("/:postId", isAuthenticated, postController.removePost);
 
 export default router;

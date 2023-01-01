@@ -1,13 +1,13 @@
 import express from "express";
 import { body } from "express-validator";
 
-import * as settingsController from "../controller/settings.js";
+import * as settingController from "../controller/setting.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 import validate from "../middleware/validate.js";
 
 const router = express.Router();
 
-router.get("/", isAuthenticated, settingsController.getSettings);
+router.get("/", isAuthenticated, settingController.getSettings);
 
 router.patch(
   "/username",
@@ -22,7 +22,7 @@ router.patch(
     .matches(/^[ㄱ-ㅎ가-힣\w-]+$/)
     .withMessage("한글/영문 대소문자/숫자/언더바(_)/하이픈(-)만을 이용해 유저이름을 입력해주세요."),
   validate,
-  settingsController.setUsername
+  settingController.setUsername
 );
 
 router.patch(
@@ -32,10 +32,10 @@ router.patch(
     .isLength({ max: 120 })
     .withMessage("짧은 소개는 최대 120자 까지 입력할 수 있습니다."),
   validate,
-  settingsController.setShortIntroduction
+  settingController.setShortIntroduction
 );
 
-router.patch("/introduction", isAuthenticated, settingsController.setIntroduction);
+router.patch("/introduction", isAuthenticated, settingController.setIntroduction);
 
 router.patch(
   "/password",
@@ -50,7 +50,7 @@ router.patch(
     .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/)
     .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요."),
   validate,
-  settingsController.setPassword
+  settingController.setPassword
 );
 
 export default router;
