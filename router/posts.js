@@ -2,7 +2,7 @@ import express from "express";
 import { body } from "express-validator";
 
 import * as postsController from "../controller/posts.js";
-import { isAuthenticated } from "../middleware/auth.js";
+import isAuthenticated from "../middleware/isAuthenticated.js";
 import validate from "../middleware/validate.js";
 
 const router = express.Router();
