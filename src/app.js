@@ -42,10 +42,10 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/users", userRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/posts", postRouter);
-app.use("/api/settings", settingRouter);
+app.use("/users", userRouter);
+app.use("/auth", authRouter);
+app.use("/posts", postRouter);
+app.use("/settings", settingRouter);
 
 app.use((req) => {
   throw new AppError({
