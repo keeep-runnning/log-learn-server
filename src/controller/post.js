@@ -1,4 +1,4 @@
-import BusinessError from "../errors/BusinessError.js";
+import AppError from "../error/AppError.js";
 import * as postRepository from "../repository/post.js";
 
 function isPostAuthor(user, post) {
@@ -25,9 +25,8 @@ export async function getPostById(req, res) {
   const postId = Number(req.params.postId);
   const post = await postRepository.findById(postId);
   if (!post) {
-    throw new BusinessError({
-      errorCode: "post-001",
-      message: "블로그 포스트가 없습니다.",
+    throw new AppError({
+      message: "블로그 포스트가 없습니다",
       statusCode: 404,
     });
   }
@@ -45,17 +44,15 @@ export async function updatePost(req, res) {
   const { title, content } = req.body;
   const post = await postRepository.findById(postId);
   if (!post) {
-    throw new BusinessError({
-      message: "블로그 포스트가 없습니다.",
+    throw new AppError({
+      message: "블로그 포스트가 없습니다",
       statusCode: 404,
-      errorCode: "post-001",
     });
   }
   if (!isPostAuthor(req.user, post)) {
-    throw new BusinessError({
-      message: "권한이 없습니다.",
+    throw new AppError({
+      message: "권한이 없습니다",
       statusCode: 403,
-      errorCode: "common-003",
     });
   }
   await postRepository.update({ id: postId, title, content });
@@ -90,17 +87,15 @@ export async function removePost(req, res) {
   const postId = Number(req.params.postId);
   const post = await postRepository.findById(postId);
   if (!post) {
-    throw new BusinessError({
-      message: "블로그 포스트가 없습니다.",
+    throw new AppError({
+      message: "블로그 포스트가 없습니다",
       statusCode: 404,
-      errorCode: "post-001",
     });
   }
   if (!isPostAuthor(req.user, post)) {
-    throw new BusinessError({
-      message: "권한이 없습니다.",
+    throw new AppError({
+      message: "권한이 없습니다",
       statusCode: 403,
-      errorCode: "common-003",
     });
   }
   await postRepository.remove(postId);

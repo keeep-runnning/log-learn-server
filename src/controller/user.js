@@ -1,7 +1,7 @@
 import * as bcrypt from "bcrypt";
 
 import config from "../config.js";
-import BusinessError from "../errors/BusinessError.js";
+import AppError from "../error/AppError.js";
 import * as userRepository from "../repository/user.js";
 
 export async function createUser(req, res) {
@@ -9,18 +9,16 @@ export async function createUser(req, res) {
 
   const userFoundByUsername = await userRepository.findByUsername(username);
   if (userFoundByUsername) {
-    throw new BusinessError({
-      errorCode: "user-001",
-      message: "이미 사용중인 유저이름입니다.",
+    throw new AppError({
+      message: "이미 사용중인 유저이름입니다",
       statusCode: 409,
     });
   }
 
   const userFoundByEmail = await userRepository.findByEmail(email);
   if (userFoundByEmail) {
-    throw new BusinessError({
-      errorCode: "user-002",
-      message: "이미 사용중인 이메일입니다.",
+    throw new AppError({
+      message: "이미 사용중인 이메일입니다",
       statusCode: 409,
     });
   }
@@ -37,9 +35,8 @@ export async function getUserByUsername(req, res) {
   const userFoundByUsername = await userRepository.findByUsername(username);
 
   if (!userFoundByUsername) {
-    throw new BusinessError({
-      errorCode: "user-004",
-      message: "존재하지 않는 유저입니다.",
+    throw new AppError({
+      message: "존재하지 않는 유저입니다",
       statusCode: 404,
     });
   }

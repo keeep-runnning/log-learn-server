@@ -1,7 +1,7 @@
 import * as bcrypt from "bcrypt";
 
 import config from "../config.js";
-import BusinessError from "../errors/BusinessError.js";
+import AppError from "../error/AppError.js";
 import * as userRepository from "../repository/user.js";
 
 export async function getSettings(req, res) {
@@ -21,9 +21,8 @@ export async function setUsername(req, res) {
 
   const userFoundByNewUsername = await userRepository.findByUsername(newUsername);
   if (userFoundByNewUsername) {
-    throw new BusinessError({
-      errorCode: "user-001",
-      message: "이미 사용중인 유저이름입니다.",
+    throw new AppError({
+      message: "이미 사용중인 유저이름입니다",
       statusCode: 409,
     });
   }
@@ -57,10 +56,9 @@ export async function setPassword(req, res) {
   const currentUser = await userRepository.findById(currentUserId);
   const isPasswordValid = await bcrypt.compare(password, currentUser.password);
   if (!isPasswordValid) {
-    throw new BusinessError({
+    throw new AppError({
       statusCode: 409,
-      errorCode: "user-003",
-      message: "비밀번호가 올바르지 않습니다.",
+      message: "비밀번호가 올바르지 않습니다",
     });
   }
 

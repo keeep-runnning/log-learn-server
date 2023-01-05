@@ -6,7 +6,7 @@ import session from "express-session";
 import passport from "passport";
 import cors from "cors";
 
-import BusinessError from "./errors/BusinessError.js";
+import AppError from "./error/AppError.js";
 import passportConfig from "./passport/index.js";
 import config from "./config.js";
 
@@ -47,27 +47,23 @@ app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/settings", settingRouter);
 
-app.use((req, res, next) => {
-  const notFoundError = new BusinessError({
+app.use((req) => {
+  throw new AppError({
     message: `[${req.method}] [${req.url}] 존재하지 않는 경로입니다.`,
     statusCode: 404,
-    errorCode: "common-005",
   });
-  next(notFoundError);
 });
 
 app.use((error, req, res, next) => {
-  console.error("error:", error.message);
-  if (error instanceof BusinessError) {
+  console.error("on error handler:", error.message);
+  if (error instanceof AppError) {
     return res.status(error.statusCode).json({
-      code: error.errorCode,
       errorMessage: error.message,
       errors: error.errors,
     });
   }
   res.status(500).json({
-    code: "common-004",
-    errorMessage: "서버에 문제가 발생했습니다.",
+    errorMessage: "서버에 문제가 발생했습니다",
     errors: [],
   });
 });
