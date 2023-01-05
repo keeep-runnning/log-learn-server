@@ -13,7 +13,6 @@ import config from "./config.js";
 import userRouter from "./router/user.js";
 import authRouter from "./router/auth.js";
 import postRouter from "./router/post.js";
-import settingRouter from "./router/setting.js";
 
 const app = express();
 
@@ -45,7 +44,6 @@ app.use(passport.session());
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
-app.use("/settings", settingRouter);
 
 app.use((req) => {
   throw new AppError({
