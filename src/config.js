@@ -3,9 +3,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config = {
-  cookie: {
-    secret: getEnvOrDefaultValue("COOKIE_SECRET"),
-  },
   host: {
     port: parseInt(getEnvOrDefaultValue("HOST_PORT", "8080")),
   },
@@ -18,6 +15,10 @@ const config = {
   },
   bcrypt: {
     saltRounds: parseInt(getEnvOrDefaultValue("BCRYPT_SALT_ROUNDS", "10")),
+  },
+  jwt: {
+    secret: getEnvOrDefaultValue("JWT_SECRET"),
+    expiresInSecond: parseInt(getEnvOrDefaultValue("JWT_EXPIRES_IN_SECOND")),
   },
 };
 

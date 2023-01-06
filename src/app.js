@@ -21,7 +21,7 @@ app.use(
 );
 app.use(morgan(config.morgan.format));
 app.use(express.json());
-app.use(cookieParser(config.cookie.secret));
+app.use(cookieParser());
 
 app.use("/users", userRouter);
 app.use("/auth", authRouter);

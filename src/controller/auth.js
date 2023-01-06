@@ -1,4 +1,5 @@
 import * as bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import config from "../config.js";
 import AppError from "../error/AppError.js";
@@ -29,41 +30,54 @@ export async function signup(req, res) {
   res.status(200).send();
 }
 
-// eslint-disable-next-line no-unused-vars
-export function login(req, res, next) {
-  // passport.authenticate("local", (authError, user) => {
-  //   if (authError) {
-  //     console.error(authError);
-  //     return next(authError);
-  //   }
-  //   return req.login(user, (loginError) => {
-  //     if (loginError) {
-  //       console.error(loginError);
-  //       return next(loginError);
-  //     }
-  //     return res.status(200).json({
-  //       isLoggedIn: true,
-  //       username: user.username,
-  //     });
-  //   });
-  // })(req, res, next);
+export async function login(req, res, next) {
+  const { email, password: rawPassword } = req.body;
+
+  const user = await userRepository.findByEmail(email);
+
+  if (!user) {
+    throw new AppError({
+      message: "이메일 혹은 비밀번호가 유효하지 않습니다",
+      statusCode: 401,
+    });
+  }
+
+  const isPasswordMatched = await bcrypt.compare(rawPassword, user.password);
+
+  if (!isPasswordMatched) {
+    throw new AppError({
+      message: "이메일 혹은 비밀번호가 유효하지 않습니다",
+      statusCode: 401,
+    });
+  }
+
+  jwt.sign(
+    { userId: user.id },
+    config.jwt.secret,
+    {
+      expiresIn: config.jwt.expiresInSecond,
+    },
+    (error, token) => {
+      if (error) {
+        return next(error);
+      }
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "Strict",
+      });
+      res.json({ username: user.username });
+    }
+  );
 }
 
-// eslint-disable-next-line no-unused-vars
-export function getCurrentUser(req, res) {
-  // return res.status(200).json({
-  //   isLoggedIn: Boolean(req.user),
-  //   username: req.user?.username ?? "",
-  // });
+export async function me(req, res) {
+  const user = await userRepository.findById(req.user.id);
+  res.json({ username: user.username });
 }
 
-// eslint-disable-next-line no-unused-vars
-export function logout(req, res, next) {
-  // req.logout((err) => {
-  //   if (err) return next(err);
-  //   req.session.destroy();
-  //   res.status(200).send();
-  // });
+export async function logout(req, res) {
+  res.clearCookie("token");
+  res.sendStatus(204);
 }
 
 export async function getSettings(req, res) {

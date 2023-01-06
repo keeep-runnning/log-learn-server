@@ -24,7 +24,7 @@ router.post(
 
 router.post("/login", authController.login);
 
-router.get("/me", isAuthenticated, authController.getCurrentUser);
+router.get("/me", isAuthenticated, authController.me);
 
 router.post("/logout", authController.logout);
 
