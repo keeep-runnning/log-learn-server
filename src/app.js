@@ -2,12 +2,9 @@ import express from "express";
 import "express-async-errors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import session from "express-session";
-import passport from "passport";
 import cors from "cors";
 
 import AppError from "./error/AppError.js";
-import passportConfig from "./passport/index.js";
 import config from "./config.js";
 
 import userRouter from "./router/user.js";
@@ -15,8 +12,6 @@ import authRouter from "./router/auth.js";
 import postRouter from "./router/post.js";
 
 const app = express();
-
-passportConfig();
 
 app.use(
   cors({
@@ -27,19 +22,6 @@ app.use(
 app.use(morgan(config.morgan.format));
 app.use(express.json());
 app.use(cookieParser(config.cookie.secret));
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secret: config.cookie.secret,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use("/users", userRouter);
 app.use("/auth", authRouter);

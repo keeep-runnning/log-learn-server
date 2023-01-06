@@ -1,4 +1,3 @@
-import passport from "passport";
 import * as bcrypt from "bcrypt";
 
 import config from "../config.js";
@@ -30,38 +29,41 @@ export async function signup(req, res) {
   res.status(200).send();
 }
 
+// eslint-disable-next-line no-unused-vars
 export function login(req, res, next) {
-  passport.authenticate("local", (authError, user) => {
-    if (authError) {
-      console.error(authError);
-      return next(authError);
-    }
-    return req.login(user, (loginError) => {
-      if (loginError) {
-        console.error(loginError);
-        return next(loginError);
-      }
-      return res.status(200).json({
-        isLoggedIn: true,
-        username: user.username,
-      });
-    });
-  })(req, res, next);
+  // passport.authenticate("local", (authError, user) => {
+  //   if (authError) {
+  //     console.error(authError);
+  //     return next(authError);
+  //   }
+  //   return req.login(user, (loginError) => {
+  //     if (loginError) {
+  //       console.error(loginError);
+  //       return next(loginError);
+  //     }
+  //     return res.status(200).json({
+  //       isLoggedIn: true,
+  //       username: user.username,
+  //     });
+  //   });
+  // })(req, res, next);
 }
 
+// eslint-disable-next-line no-unused-vars
 export function getCurrentUser(req, res) {
-  return res.status(200).json({
-    isLoggedIn: Boolean(req.user),
-    username: req.user?.username ?? "",
-  });
+  // return res.status(200).json({
+  //   isLoggedIn: Boolean(req.user),
+  //   username: req.user?.username ?? "",
+  // });
 }
 
+// eslint-disable-next-line no-unused-vars
 export function logout(req, res, next) {
-  req.logout((err) => {
-    if (err) return next(err);
-    req.session.destroy();
-    res.status(200).send();
-  });
+  // req.logout((err) => {
+  //   if (err) return next(err);
+  //   req.session.destroy();
+  //   res.status(200).send();
+  // });
 }
 
 export async function getSettings(req, res) {
