@@ -1,4 +1,9 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
+
+export const postIdParamValidator = param("postId")
+  .isInt()
+  .withMessage("블로그 포스트 id가 유효하지 않습니다")
+  .toInt();
 
 export const titleBodyValidator = body("title")
   .trim()

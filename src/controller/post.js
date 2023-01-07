@@ -22,7 +22,7 @@ export async function createPost(req, res) {
 }
 
 export async function getPostById(req, res) {
-  const postId = Number(req.params.postId);
+  const { postId } = req.params;
   const post = await postRepository.findById(postId);
   if (!post) {
     throw new AppError({
@@ -40,7 +40,7 @@ export async function getPostById(req, res) {
 }
 
 export async function updatePost(req, res) {
-  const postId = Number(req.params.postId);
+  const { postId } = req.params;
   const { title, content } = req.body;
   const post = await postRepository.findById(postId);
   if (!post) {
@@ -84,7 +84,7 @@ export async function getPostsByAuthorName(req, res) {
 }
 
 export async function removePost(req, res) {
-  const postId = Number(req.params.postId);
+  const { postId } = req.params;
   const post = await postRepository.findById(postId);
   if (!post) {
     throw new AppError({
