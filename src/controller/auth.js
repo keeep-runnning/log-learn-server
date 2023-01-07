@@ -1,8 +1,8 @@
 import * as bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 
 import config from "../config.js";
 import AppError from "../error/AppError.js";
+import { createToken } from "../lib/jwt-token.js";
 import * as userRepository from "../repository/user.js";
 
 export async function signup(req, res) {
@@ -51,23 +51,13 @@ export async function login(req, res, next) {
     });
   }
 
-  jwt.sign(
-    { userId: user.id },
-    config.jwt.secret,
-    {
-      expiresIn: config.jwt.expiresInSecond,
-    },
-    (error, token) => {
-      if (error) {
-        return next(error);
-      }
-      res.cookie("token", token, {
-        httpOnly: true,
-        sameSite: "Strict",
-      });
-      res.json({ username: user.username });
-    }
-  );
+  const token = await createToken({ userId: user.id });
+
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "Strict",
+  });
+  res.json({ username: user.username });
 }
 
 export async function me(req, res) {
