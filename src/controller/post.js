@@ -61,9 +61,8 @@ export async function updatePost(req, res) {
 
 export async function getPostsByAuthorName(req, res) {
   const PAGE_SIZE = 10;
-  let cursor = Number(req.query.cursor);
-  if (Number.isNaN(cursor)) cursor = -1;
-  const authorName = req.query.authorName ?? "";
+
+  const { authorName, cursor } = req.query;
 
   const posts = await postRepository.findPageByAuthorName({
     authorName,

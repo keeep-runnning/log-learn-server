@@ -7,13 +7,21 @@ import {
   titleBodyValidator,
   contentBodyValidator,
   postIdParamValidator,
+  authorNameQueryValidator,
+  cursorQueryValidator,
 } from "../middleware/postRequestValidator.js";
 
 const router = express.Router();
 
 router.get("/:postId", postIdParamValidator, validate, postController.getPostById);
 
-router.get("/", postController.getPostsByAuthorName);
+router.get(
+  "/",
+  authorNameQueryValidator,
+  cursorQueryValidator,
+  validate,
+  postController.getPostsByAuthorName
+);
 
 router.post(
   "/",
