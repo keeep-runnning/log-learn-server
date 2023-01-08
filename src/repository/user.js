@@ -39,12 +39,13 @@ export async function updateShortIntroduction({ id, newShortIntroduction }) {
 }
 
 export async function updateIntroduction({ id, newIntroduction }) {
-  await db.user.update({
+  const { introduction } = await db.user.update({
     where: { id },
     data: {
       introduction: newIntroduction,
     },
   });
+  return introduction;
 }
 
 export async function updatePassword({ id, newPassword }) {

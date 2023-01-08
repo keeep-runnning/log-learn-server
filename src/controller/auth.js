@@ -119,11 +119,14 @@ export async function setShortIntroduction(req, res) {
 }
 
 export async function setIntroduction(req, res) {
-  const { introduction } = req.body;
-  const { id: currentUserId } = req.user;
+  const { introduction: newIntroduction } = req.body;
 
-  await userRepository.updateIntroduction({ id: currentUserId, newIntroduction: introduction });
-  res.status(204).json({});
+  const updatedIntroduction = await userRepository.updateIntroduction({
+    id: req.user.id,
+    newIntroduction,
+  });
+
+  res.json({ introduction: updatedIntroduction });
 }
 
 export async function setPassword(req, res) {
