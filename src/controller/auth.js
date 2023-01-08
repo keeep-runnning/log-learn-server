@@ -103,8 +103,8 @@ export async function setUsername(req, res) {
       statusCode: 409,
     });
   }
-  await userRepository.updateUsername({ id: currentUserId, newUsername });
-  res.status(204).json({});
+  const updatedUsername = await userRepository.updateUsername({ id: currentUserId, newUsername });
+  res.json({ username: updatedUsername });
 }
 
 export async function setShortIntroduction(req, res) {
