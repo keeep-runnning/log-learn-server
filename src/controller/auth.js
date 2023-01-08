@@ -25,9 +25,13 @@ export async function signup(req, res) {
   }
 
   const hashedPassword = await bcrypt.hash(rawPassword, config.bcrypt.saltRounds);
-  await userRepository.create({ username, email, password: hashedPassword });
+  const createdUser = await userRepository.create({ username, email, password: hashedPassword });
 
-  res.status(200).send();
+  res.status(201).json({
+    userId: createdUser.id,
+    username: createdUser.username,
+    email: createdUser.email,
+  });
 }
 
 export async function login(req, res, next) {

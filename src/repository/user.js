@@ -13,7 +13,7 @@ export async function findByEmail(email) {
 }
 
 export async function create({ username, email, password }) {
-  await db.user.create({
+  return await db.user.create({
     data: { username, email, password },
   });
 }
