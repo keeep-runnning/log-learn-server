@@ -11,13 +11,16 @@ function isPostAuthor(user, post) {
 export async function createPost(req, res) {
   const { title, content } = req.body;
   const { id: authorId } = req.user;
+
   const newPost = await postRepository.create({ title, content, authorId });
+
   res.status(201).json({
-    id: String(newPost.id),
+    id: newPost.id,
     title: newPost.title,
     content: newPost.content,
-    author: newPost.author.username,
     createdAt: newPost.createdAt,
+    authorId: newPost.authorId,
+    authorName: newPost.author.username,
   });
 }
 
