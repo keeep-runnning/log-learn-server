@@ -70,7 +70,10 @@ export async function login(req, res) {
 
 export async function me(req, res) {
   const user = await userRepository.findById(req.user.id);
-  res.json({ username: user.username });
+  res.json({
+    userId: user.id,
+    username: user.username,
+  });
 }
 
 export async function logout(req, res) {
