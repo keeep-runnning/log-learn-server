@@ -26,19 +26,23 @@ export async function createPost(req, res) {
 
 export async function getPostById(req, res) {
   const { postId } = req.params;
+
   const post = await postRepository.findById(postId);
+
   if (!post) {
     throw new AppError({
       message: "블로그 포스트가 없습니다",
       statusCode: 404,
     });
   }
+
   res.json({
-    id: String(post.id),
+    id: post.id,
     title: post.title,
     content: post.content,
-    author: post.author.username,
     createdAt: post.createdAt,
+    authorId: post.authorId,
+    authorName: post.author.username,
   });
 }
 
