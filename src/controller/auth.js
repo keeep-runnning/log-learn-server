@@ -34,7 +34,7 @@ export async function signup(req, res) {
   });
 }
 
-export async function login(req, res, next) {
+export async function login(req, res) {
   const { email, password: rawPassword } = req.body;
 
   const user = await userRepository.findByEmail(email);
@@ -61,7 +61,11 @@ export async function login(req, res, next) {
     httpOnly: true,
     sameSite: "Strict",
   });
-  res.json({ username: user.username });
+
+  res.json({
+    userId: user.id,
+    username: user.username,
+  });
 }
 
 export async function me(req, res) {
