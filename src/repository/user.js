@@ -29,12 +29,13 @@ export async function updateUsername({ id, newUsername }) {
 }
 
 export async function updateShortIntroduction({ id, newShortIntroduction }) {
-  await db.user.update({
+  const { shortIntroduction } = await db.user.update({
     where: { id },
     data: {
       shortIntroduction: newShortIntroduction,
     },
   });
+  return shortIntroduction;
 }
 
 export async function updateIntroduction({ id, newIntroduction }) {

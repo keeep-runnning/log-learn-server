@@ -108,14 +108,14 @@ export async function setUsername(req, res) {
 }
 
 export async function setShortIntroduction(req, res) {
-  const { shortIntroduction } = req.body;
-  const { id: currentUserId } = req.user;
+  const { shortIntroduction: newShortIntroduction } = req.body;
 
-  await userRepository.updateShortIntroduction({
-    id: currentUserId,
-    newShortIntroduction: shortIntroduction,
+  const updatedShortIntroduction = await userRepository.updateShortIntroduction({
+    id: req.user.id,
+    newShortIntroduction,
   });
-  res.status(204).json({});
+
+  res.json({ shortIntroduction: updatedShortIntroduction });
 }
 
 export async function setIntroduction(req, res) {
