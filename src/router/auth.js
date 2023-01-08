@@ -8,6 +8,7 @@ import {
   passwordBodyValidator,
   shortIntroductionBodyValidator,
   newPasswordBodyValidator,
+  introductionBodyValidator,
 } from "../middleware/userRequestValidator.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 
@@ -46,7 +47,13 @@ router.put(
   authController.setShortIntroduction
 );
 
-router.put("/settings/introduction", isAuthenticated, authController.setIntroduction);
+router.put(
+  "/settings/introduction",
+  isAuthenticated,
+  introductionBodyValidator,
+  validate,
+  authController.setIntroduction
+);
 
 router.put(
   "/settings/password",

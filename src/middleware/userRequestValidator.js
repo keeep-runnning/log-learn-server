@@ -47,3 +47,8 @@ export const shortIntroductionBodyValidator = body("shortIntroduction")
   .trim()
   .isLength({ max: 120 })
   .withMessage("짧은 소개는 최대 120자 까지 입력할 수 있습니다");
+
+export const introductionBodyValidator = body("introduction")
+  .exists()
+  .withMessage("소개가 없습니다")
+  .trim();
