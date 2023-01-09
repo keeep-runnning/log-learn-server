@@ -13,36 +13,39 @@ export async function findByEmail(email) {
 }
 
 export async function create({ username, email, password }) {
-  await db.user.create({
+  return await db.user.create({
     data: { username, email, password },
   });
 }
 
 export async function updateUsername({ id, newUsername }) {
-  await db.user.update({
+  const { username } = await db.user.update({
     where: { id },
     data: {
       username: newUsername,
     },
   });
+  return username;
 }
 
 export async function updateShortIntroduction({ id, newShortIntroduction }) {
-  await db.user.update({
+  const { shortIntroduction } = await db.user.update({
     where: { id },
     data: {
       shortIntroduction: newShortIntroduction,
     },
   });
+  return shortIntroduction;
 }
 
 export async function updateIntroduction({ id, newIntroduction }) {
-  await db.user.update({
+  const { introduction } = await db.user.update({
     where: { id },
     data: {
       introduction: newIntroduction,
     },
   });
+  return introduction;
 }
 
 export async function updatePassword({ id, newPassword }) {

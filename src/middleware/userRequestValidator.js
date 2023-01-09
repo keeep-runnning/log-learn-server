@@ -41,5 +41,14 @@ export const newPasswordBodyValidator = body("newPassword")
   .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요");
 
 export const shortIntroductionBodyValidator = body("shortIntroduction")
+  .exists()
+  .withMessage("짧은 소개가 없습니다")
+  .bail()
+  .trim()
   .isLength({ max: 120 })
   .withMessage("짧은 소개는 최대 120자 까지 입력할 수 있습니다");
+
+export const introductionBodyValidator = body("introduction")
+  .exists()
+  .withMessage("소개가 없습니다")
+  .trim();

@@ -31,8 +31,6 @@ export async function findById(id) {
 }
 
 export async function findPageByAuthorName({ authorName, cursor, pageSize }) {
-  const isNotFirstPage = cursor !== -1;
-
   const filter = {
     take: pageSize,
     where: {
@@ -52,7 +50,7 @@ export async function findPageByAuthorName({ authorName, cursor, pageSize }) {
     },
   };
 
-  if (isNotFirstPage) {
+  if (cursor) {
     filter.skip = 1;
     filter.cursor = {
       id: cursor,
@@ -63,9 +61,16 @@ export async function findPageByAuthorName({ authorName, cursor, pageSize }) {
 }
 
 export async function update({ id, title, content }) {
-  await db.post.update({
+  return await db.post.update({
     where: { id },
     data: { title, content },
+    include: {
+      author: {
+        select: {
+          username: true,
+        },
+      },
+    },
   });
 }
 
