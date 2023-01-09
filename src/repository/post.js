@@ -61,9 +61,16 @@ export async function findPageByAuthorName({ authorName, cursor, pageSize }) {
 }
 
 export async function update({ id, title, content }) {
-  await db.post.update({
+  return await db.post.update({
     where: { id },
     data: { title, content },
+    include: {
+      author: {
+        select: {
+          username: true,
+        },
+      },
+    },
   });
 }
 

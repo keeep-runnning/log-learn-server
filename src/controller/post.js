@@ -49,21 +49,33 @@ export async function getPostById(req, res) {
 export async function updatePost(req, res) {
   const { postId } = req.params;
   const { title, content } = req.body;
+
   const post = await postRepository.findById(postId);
+
   if (!post) {
     throw new AppError({
       message: "블로그 포스트가 없습니다",
       statusCode: 404,
     });
   }
+
   if (!isPostAuthor(req.user, post)) {
     throw new AppError({
       message: "권한이 없습니다",
       statusCode: 403,
     });
   }
-  await postRepository.update({ id: postId, title, content });
-  res.status(204).json();
+
+  const updatedPost = await postRepository.update({ id: postId, title, content });
+
+  res.json({
+    id: updatedPost.id,
+    title: updatedPost.title,
+    content: updatedPost.content,
+    createdAt: updatedPost.createdAt,
+    authorId: updatedPost.authorId,
+    authorName: updatedPost.author.username,
+  });
 }
 
 export async function getPostsByAuthorName(req, res) {
