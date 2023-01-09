@@ -1,11 +1,8 @@
 import AppError from "../error/AppError.js";
 import * as postRepository from "../repository/post.js";
 
-function isPostAuthor(user, post) {
-  if (!user || !post) {
-    return false;
-  }
-  return user.id === post.authorId;
+function isPostAuthor(post, userId) {
+  return post.authorId === userId;
 }
 
 export async function createPost(req, res) {
@@ -47,6 +44,7 @@ export async function getPostById(req, res) {
 }
 
 export async function updatePost(req, res) {
+  const { id: userId } = req.user;
   const { postId } = req.params;
   const { title, content } = req.body;
 
@@ -59,7 +57,7 @@ export async function updatePost(req, res) {
     });
   }
 
-  if (!isPostAuthor(req.user, post)) {
+  if (!isPostAuthor(post, userId)) {
     throw new AppError({
       message: "권한이 없습니다",
       statusCode: 403,
@@ -102,6 +100,7 @@ export async function getPostsByAuthorName(req, res) {
 }
 
 export async function removePost(req, res) {
+  const { id: userId } = req.user;
   const { postId } = req.params;
 
   const post = await postRepository.findById(postId);
@@ -112,7 +111,7 @@ export async function removePost(req, res) {
     });
   }
 
-  if (!isPostAuthor(req.user, post)) {
+  if (!isPostAuthor(post, userId)) {
     throw new AppError({
       message: "권한이 없습니다",
       statusCode: 403,
