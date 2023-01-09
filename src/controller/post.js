@@ -91,11 +91,11 @@ export async function getPostsByAuthorName(req, res) {
 
   res.json({
     posts: posts.map((post) => ({
-      id: String(post.id),
-      author: post.author.username,
+      id: post.id,
       title: post.title,
-      content: post.content,
       createdAt: post.createdAt,
+      authorId: post.authorId,
+      authorName: post.author.username,
     })),
     nextCursor: posts.length === PAGE_SIZE ? String(posts[posts.length - 1].id) : null,
   });
