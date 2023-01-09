@@ -9,10 +9,10 @@ function isPostAuthor(user, post) {
 }
 
 export async function createPost(req, res) {
+  const { id: userId } = req.user;
   const { title, content } = req.body;
-  const { id: authorId } = req.user;
 
-  const newPost = await postRepository.create({ title, content, authorId });
+  const newPost = await postRepository.create({ title, content, authorId: userId });
 
   res.status(201).json({
     id: newPost.id,
@@ -103,6 +103,7 @@ export async function getPostsByAuthorName(req, res) {
 
 export async function removePost(req, res) {
   const { postId } = req.params;
+
   const post = await postRepository.findById(postId);
   if (!post) {
     throw new AppError({
@@ -110,12 +111,15 @@ export async function removePost(req, res) {
       statusCode: 404,
     });
   }
+
   if (!isPostAuthor(req.user, post)) {
     throw new AppError({
       message: "권한이 없습니다",
       statusCode: 403,
     });
   }
+
   await postRepository.remove(postId);
-  res.status(204).json();
+
+  res.sendStatus(204);
 }

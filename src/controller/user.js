@@ -4,18 +4,18 @@ import * as userRepository from "../repository/user.js";
 export async function getUserByUsername(req, res) {
   const { username } = req.params;
 
-  const userFoundByUsername = await userRepository.findByUsername(username);
+  const user = await userRepository.findByUsername(username);
 
-  if (!userFoundByUsername) {
+  if (!user) {
     throw new AppError({
       message: "존재하지 않는 유저입니다",
       statusCode: 404,
     });
   }
 
-  res.status(200).json({
-    username: userFoundByUsername.username,
-    shortIntroduction: userFoundByUsername.shortIntroduction ?? "",
-    introduction: userFoundByUsername.introduction ?? "",
+  res.json({
+    username: user.username,
+    shortIntroduction: user.shortIntroduction ?? "",
+    introduction: user.introduction ?? "",
   });
 }

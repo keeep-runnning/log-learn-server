@@ -69,7 +69,10 @@ export async function login(req, res) {
 }
 
 export async function me(req, res) {
-  const user = await userRepository.findById(req.user.id);
+  const { id: userId } = req.user;
+
+  const user = await userRepository.findById(userId);
+
   res.json({
     userId: user.id,
     username: user.username,
@@ -82,18 +85,20 @@ export async function logout(req, res) {
 }
 
 export async function getSettings(req, res) {
-  const { id: currentUserId } = req.user;
-  const currentUser = await userRepository.findById(currentUserId);
-  res.status(200).json({
-    username: currentUser.username,
-    email: currentUser.email,
-    shortIntroduction: currentUser.shortIntroduction ?? "",
-    introduction: currentUser.introduction ?? "",
+  const { id: userId } = req.user;
+
+  const user = await userRepository.findById(userId);
+
+  res.json({
+    username: user.username,
+    email: user.email,
+    shortIntroduction: user.shortIntroduction ?? "",
+    introduction: user.introduction ?? "",
   });
 }
 
 export async function setUsername(req, res) {
-  const { id: currentUserId } = req.user;
+  const { id: userId } = req.user;
   const { username: newUsername } = req.body;
 
   const userFoundByNewUsername = await userRepository.findByUsername(newUsername);
@@ -103,15 +108,18 @@ export async function setUsername(req, res) {
       statusCode: 409,
     });
   }
-  const updatedUsername = await userRepository.updateUsername({ id: currentUserId, newUsername });
+
+  const updatedUsername = await userRepository.updateUsername({ id: userId, newUsername });
+
   res.json({ username: updatedUsername });
 }
 
 export async function setShortIntroduction(req, res) {
+  const { id: userId } = req.user;
   const { shortIntroduction: newShortIntroduction } = req.body;
 
   const updatedShortIntroduction = await userRepository.updateShortIntroduction({
-    id: req.user.id,
+    id: userId,
     newShortIntroduction,
   });
 
@@ -119,10 +127,11 @@ export async function setShortIntroduction(req, res) {
 }
 
 export async function setIntroduction(req, res) {
+  const { id: userId } = req.user;
   const { introduction: newIntroduction } = req.body;
 
   const updatedIntroduction = await userRepository.updateIntroduction({
-    id: req.user.id,
+    id: userId,
     newIntroduction,
   });
 
@@ -130,12 +139,12 @@ export async function setIntroduction(req, res) {
 }
 
 export async function setPassword(req, res) {
+  const { id: userId } = req.user;
   const { password, newPassword } = req.body;
-  const { id: currentUserId } = req.user;
 
-  const currentUser = await userRepository.findById(currentUserId);
-  const isPasswordValid = await bcrypt.compare(password, currentUser.password);
-  if (!isPasswordValid) {
+  const user = await userRepository.findById(userId);
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatched) {
     throw new AppError({
       statusCode: 409,
       message: "비밀번호가 올바르지 않습니다",
@@ -143,6 +152,7 @@ export async function setPassword(req, res) {
   }
 
   const newHashedPassword = await bcrypt.hash(newPassword, config.bcrypt.saltRounds);
-  await userRepository.updatePassword({ id: currentUserId, newPassword: newHashedPassword });
-  res.status(204).json({});
+  await userRepository.updatePassword({ id: userId, newPassword: newHashedPassword });
+
+  res.sendStatus(204);
 }
