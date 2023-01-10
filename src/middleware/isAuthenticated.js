@@ -1,5 +1,5 @@
 import AppError from "../error/AppError.js";
-import { verifyToken } from "../lib/jwt-token.js";
+import { verifyToken } from "../lib/jwtToken.js";
 import * as userRepository from "../repository/user.js";
 
 const LOG_TAG = `${isAuthenticated.name} middleware:`;

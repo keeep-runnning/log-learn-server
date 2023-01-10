@@ -2,7 +2,7 @@ import * as bcrypt from "bcrypt";
 
 import config from "../config.js";
 import AppError from "../error/AppError.js";
-import { createToken } from "../lib/jwt-token.js";
+import { createToken } from "../lib/jwtToken.js";
 import * as userRepository from "../repository/user.js";
 
 export async function signup(req, res) {
