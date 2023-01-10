@@ -140,10 +140,10 @@ export async function setIntroduction(req, res) {
 
 export async function setPassword(req, res) {
   const { id: userId } = req.user;
-  const { password, newPassword } = req.body;
+  const { oldPassword, newPassword } = req.body;
 
   const user = await userRepository.findById(userId);
-  const isPasswordMatched = await bcrypt.compare(password, user.password);
+  const isPasswordMatched = await bcrypt.compare(oldPassword, user.password);
   if (!isPasswordMatched) {
     throw new AppError({
       statusCode: 409,

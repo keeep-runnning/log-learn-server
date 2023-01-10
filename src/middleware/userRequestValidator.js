@@ -39,6 +39,13 @@ export const passwordBodyValidator = body("password")
   .matches(PASSWORD_PATTERN)
   .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요");
 
+export const oldPasswordBodyValidator = body("oldPassword")
+  .isString()
+  .withMessage("기존 비밀번호가 유효하지 않습니다")
+  .bail()
+  .notEmpty()
+  .withMessage("기존 비밀번호를 입력해주세요");
+
 export const newPasswordBodyValidator = body("newPassword")
   .isString()
   .withMessage("새 비밀번호가 유효하지 않습니다")

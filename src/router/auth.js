@@ -9,6 +9,7 @@ import {
   shortIntroductionBodyValidator,
   newPasswordBodyValidator,
   introductionBodyValidator,
+  oldPasswordBodyValidator,
 } from "../middleware/userRequestValidator.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 
@@ -58,6 +59,7 @@ router.put(
 router.put(
   "/settings/password",
   isAuthenticated,
+  oldPasswordBodyValidator,
   newPasswordBodyValidator,
   validate,
   authController.setPassword
