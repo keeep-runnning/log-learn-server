@@ -1,6 +1,9 @@
 import { body } from "express-validator";
 
 export const usernameBodyValidator = body("username")
+  .isString()
+  .withMessage("유저이름이 유효하지 않습니다")
+  .bail()
   .notEmpty()
   .withMessage("유저이름을 입력해주세요")
   .bail()
@@ -11,6 +14,9 @@ export const usernameBodyValidator = body("username")
   .withMessage("한글/영문 대소문자/숫자/언더바(_)/하이픈(-)만을 이용해 유저이름을 입력해주세요");
 
 export const emailBodyValidator = body("email")
+  .isString()
+  .withMessage("이메일이 유효하지 않습니다")
+  .bail()
   .notEmpty()
   .withMessage("이메일을 입력해주세요")
   .bail()
@@ -21,6 +27,9 @@ const PASSWORD_LENGTH = { min: 8, max: 32 };
 const PASSWORD_PATTERN = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/;
 
 export const passwordBodyValidator = body("password")
+  .isString()
+  .withMessage("비밀번호가 유효하지 않습니다")
+  .bail()
   .notEmpty()
   .withMessage("비밀번호를 입력해주세요")
   .bail()
@@ -31,6 +40,9 @@ export const passwordBodyValidator = body("password")
   .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요");
 
 export const newPasswordBodyValidator = body("newPassword")
+  .isString()
+  .withMessage("새 비밀번호가 유효하지 않습니다")
+  .bail()
   .notEmpty()
   .withMessage("새 비밀번호를 입력해주세요")
   .bail()
@@ -41,14 +53,14 @@ export const newPasswordBodyValidator = body("newPassword")
   .withMessage("영문 대소문자/숫자/특수문자를 각각 1자 이상 포함해주세요");
 
 export const shortIntroductionBodyValidator = body("shortIntroduction")
-  .exists()
-  .withMessage("짧은 소개가 없습니다")
+  .isString()
+  .withMessage("짧은 소개가 유효하지 않습니다")
   .bail()
   .trim()
   .isLength({ max: 120 })
   .withMessage("짧은 소개는 최대 120자 까지 입력할 수 있습니다");
 
 export const introductionBodyValidator = body("introduction")
-  .exists()
-  .withMessage("소개가 없습니다")
+  .isString()
+  .withMessage("소개가 유효하지 않습니다")
   .trim();

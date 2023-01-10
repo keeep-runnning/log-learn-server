@@ -16,6 +16,9 @@ export const cursorQueryValidator = query("cursor")
   .toInt();
 
 export const titleBodyValidator = body("title")
+  .isString()
+  .withMessage("블로그 포스트 제목이 유효하지 않습니다")
+  .bail()
   .trim()
   .notEmpty()
   .withMessage("블로그 포스트 제목을 입력해주세요")
@@ -24,6 +27,9 @@ export const titleBodyValidator = body("title")
   .withMessage("블로그 포스트 제목은 최대 100자까지 입력할 수 있습니다");
 
 export const contentBodyValidator = body("content")
+  .isString()
+  .withMessage("블로그 포스트 내용이 유효하지 않습니다")
+  .bail()
   .trim()
   .notEmpty()
   .withMessage("블로그 포스트 내용을 입력해주세요");

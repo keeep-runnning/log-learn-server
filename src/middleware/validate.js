@@ -10,7 +10,7 @@ export default function validate(req, res, next) {
       statusCode: 400,
       errors: validationErrors.array().map(({ param, value, msg }) => ({
         field: param,
-        value: value ?? "",
+        value,
         reason: msg,
       })),
     });
