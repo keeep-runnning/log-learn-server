@@ -87,7 +87,7 @@ export async function getPostsByAuthorName(req, res) {
       authorId: post.authorId,
       authorName: post.author.username,
     })),
-    nextCursor: posts.length === PAGE_SIZE ? String(posts[posts.length - 1].id) : null,
+    nextCursor: posts.length === PAGE_SIZE ? posts[posts.length - 1].id : null,
   });
 }
 
