@@ -4,8 +4,9 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import AppError from "./error/AppError.js";
 import config from "./config.js";
+import AppError from "./error/AppError.js";
+import NotFoundError from "./error/common/NotFoundError.js";
 
 import userRouter from "./router/user.js";
 import authRouter from "./router/auth.js";
@@ -27,15 +28,12 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
 
-app.use((req) => {
-  throw new AppError({
-    message: `[${req.method}] [${req.url}] 존재하지 않는 경로입니다.`,
-    statusCode: 404,
-  });
+app.use(() => {
+  throw new NotFoundError();
 });
 
 app.use((error, req, res, next) => {
-  console.error("on error handler:", error.message);
+  console.error("on error handler:", error);
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
       errorMessage: error.message,

@@ -1,7 +1,10 @@
 import * as bcrypt from "bcrypt";
 
 import config from "../config.js";
-import AppError from "../error/AppError.js";
+import EmailAlreadyExistError from "../error/auth/EmailAlreadyExistError.js";
+import InvalidCredentialsError from "../error/auth/InvalidCredentialsError.js";
+import InvalidOldPasswordError from "../error/auth/InvalidOldPasswordError.js";
+import UsernameAlreadyExistError from "../error/auth/UsernameAlreadyExistError.js";
 import { createToken } from "../lib/jwtToken.js";
 import * as userRepository from "../repository/user.js";
 
@@ -10,18 +13,12 @@ export async function signup(req, res) {
 
   const userFoundByUsername = await userRepository.findByUsername(username);
   if (userFoundByUsername) {
-    throw new AppError({
-      message: "이미 사용중인 유저이름입니다",
-      statusCode: 409,
-    });
+    throw new UsernameAlreadyExistError();
   }
 
   const userFoundByEmail = await userRepository.findByEmail(email);
   if (userFoundByEmail) {
-    throw new AppError({
-      message: "이미 사용중인 이메일입니다",
-      statusCode: 409,
-    });
+    throw new EmailAlreadyExistError();
   }
 
   const hashedPassword = await bcrypt.hash(rawPassword, config.bcrypt.saltRounds);
@@ -38,21 +35,13 @@ export async function login(req, res) {
   const { email, password: rawPassword } = req.body;
 
   const user = await userRepository.findByEmail(email);
-
   if (!user) {
-    throw new AppError({
-      message: "이메일 혹은 비밀번호가 유효하지 않습니다",
-      statusCode: 401,
-    });
+    throw new InvalidCredentialsError();
   }
 
   const isPasswordMatched = await bcrypt.compare(rawPassword, user.password);
-
   if (!isPasswordMatched) {
-    throw new AppError({
-      message: "이메일 혹은 비밀번호가 유효하지 않습니다",
-      statusCode: 401,
-    });
+    throw new InvalidCredentialsError();
   }
 
   const token = await createToken({ userId: user.id });
@@ -103,10 +92,7 @@ export async function setUsername(req, res) {
 
   const userFoundByNewUsername = await userRepository.findByUsername(newUsername);
   if (userFoundByNewUsername) {
-    throw new AppError({
-      message: "이미 사용중인 유저이름입니다",
-      statusCode: 409,
-    });
+    throw new UsernameAlreadyExistError();
   }
 
   const updatedUsername = await userRepository.updateUsername({ id: userId, newUsername });
@@ -145,10 +131,7 @@ export async function setPassword(req, res) {
   const user = await userRepository.findById(userId);
   const isPasswordMatched = await bcrypt.compare(oldPassword, user.password);
   if (!isPasswordMatched) {
-    throw new AppError({
-      statusCode: 409,
-      message: "비밀번호가 올바르지 않습니다",
-    });
+    throw new InvalidOldPasswordError();
   }
 
   const newHashedPassword = await bcrypt.hash(newPassword, config.bcrypt.saltRounds);

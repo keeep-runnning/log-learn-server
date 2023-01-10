@@ -1,4 +1,5 @@
-import AppError from "../error/AppError.js";
+import ForbiddenError from "../error/common/ForbiddenError.js";
+import PostNotFoundError from "../error/post/PostNotFoundError.js";
 import * as postRepository from "../repository/post.js";
 
 function isPostAuthor(post, userId) {
@@ -27,10 +28,7 @@ export async function getPostById(req, res) {
   const post = await postRepository.findById(postId);
 
   if (!post) {
-    throw new AppError({
-      message: "블로그 포스트가 없습니다",
-      statusCode: 404,
-    });
+    throw new PostNotFoundError();
   }
 
   res.json({
@@ -51,17 +49,11 @@ export async function updatePost(req, res) {
   const post = await postRepository.findById(postId);
 
   if (!post) {
-    throw new AppError({
-      message: "블로그 포스트가 없습니다",
-      statusCode: 404,
-    });
+    throw new PostNotFoundError();
   }
 
   if (!isPostAuthor(post, userId)) {
-    throw new AppError({
-      message: "권한이 없습니다",
-      statusCode: 403,
-    });
+    throw new ForbiddenError();
   }
 
   const updatedPost = await postRepository.update({ id: postId, title, content });
@@ -105,17 +97,11 @@ export async function removePost(req, res) {
 
   const post = await postRepository.findById(postId);
   if (!post) {
-    throw new AppError({
-      message: "블로그 포스트가 없습니다",
-      statusCode: 404,
-    });
+    throw new PostNotFoundError();
   }
 
   if (!isPostAuthor(post, userId)) {
-    throw new AppError({
-      message: "권한이 없습니다",
-      statusCode: 403,
-    });
+    throw new ForbiddenError();
   }
 
   await postRepository.remove(postId);

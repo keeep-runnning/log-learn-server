@@ -1,4 +1,4 @@
-import AppError from "../error/AppError.js";
+import UserNotFoundError from "../error/user/UserNotFoundError.js";
 import * as userRepository from "../repository/user.js";
 
 export async function getUserByUsername(req, res) {
@@ -7,10 +7,7 @@ export async function getUserByUsername(req, res) {
   const user = await userRepository.findByUsername(username);
 
   if (!user) {
-    throw new AppError({
-      message: "존재하지 않는 유저입니다",
-      statusCode: 404,
-    });
+    throw new UserNotFoundError();
   }
 
   res.json({
