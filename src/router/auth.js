@@ -30,10 +30,8 @@ router.get("/me", isAuthenticated, authController.me);
 
 router.post("/logout", authController.logout);
 
-router.get("/settings", isAuthenticated, authController.getSettings);
-
 router.put(
-  "/settings/username",
+  "/me/username",
   isAuthenticated,
   usernameBodyValidator,
   validate,
@@ -41,7 +39,7 @@ router.put(
 );
 
 router.put(
-  "/settings/short-introduction",
+  "/me/short-introduction",
   isAuthenticated,
   shortIntroductionBodyValidator,
   validate,
@@ -49,7 +47,7 @@ router.put(
 );
 
 router.put(
-  "/settings/introduction",
+  "/me/introduction",
   isAuthenticated,
   introductionBodyValidator,
   validate,
@@ -57,7 +55,7 @@ router.put(
 );
 
 router.put(
-  "/settings/password",
+  "/me/password",
   isAuthenticated,
   oldPasswordBodyValidator,
   newPasswordBodyValidator,

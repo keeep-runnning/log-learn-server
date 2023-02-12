@@ -25,9 +25,11 @@ export async function signup(req, res) {
   const createdUser = await userRepository.create({ username, email, password: hashedPassword });
 
   res.status(201).json({
-    userId: createdUser.id,
+    id: createdUser.id,
     username: createdUser.username,
     email: createdUser.email,
+    shortIntroduction: createdUser.shortIntroduction ?? "",
+    introduction: createdUser.introduction ?? "",
   });
 }
 
@@ -52,8 +54,11 @@ export async function login(req, res) {
   });
 
   res.json({
-    userId: user.id,
+    id: user.id,
     username: user.username,
+    email: user.email,
+    shortIntroduction: user.shortIntroduction ?? "",
+    introduction: user.introduction ?? "",
   });
 }
 
@@ -63,27 +68,17 @@ export async function me(req, res) {
   const user = await userRepository.findById(userId);
 
   res.json({
-    userId: user.id,
+    id: user.id,
     username: user.username,
+    email: user.email,
+    shortIntroduction: user.shortIntroduction ?? "",
+    introduction: user.introduction ?? "",
   });
 }
 
 export async function logout(req, res) {
   res.clearCookie("token");
   res.sendStatus(204);
-}
-
-export async function getSettings(req, res) {
-  const { id: userId } = req.user;
-
-  const user = await userRepository.findById(userId);
-
-  res.json({
-    username: user.username,
-    email: user.email,
-    shortIntroduction: user.shortIntroduction ?? "",
-    introduction: user.introduction ?? "",
-  });
 }
 
 export async function setUsername(req, res) {
