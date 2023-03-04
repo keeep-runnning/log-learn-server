@@ -11,7 +11,6 @@ const config = {
   },
   cors: {
     origin: getEnvOrDefaultValue("CORS_ORIGIN"),
-    credentials: Boolean(getEnvOrDefaultValue("CORS_CREDENTIALS")),
   },
   bcrypt: {
     saltRounds: parseInt(getEnvOrDefaultValue("BCRYPT_SALT_ROUNDS", "10")),

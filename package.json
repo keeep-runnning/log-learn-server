@@ -4,7 +4,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/app",
+    "start": "NODE_ENV=production node src/app",
+    "dev": "NODE_ENV=development nodemon src/app",
     "prettier": "prettier --write .",
     "lint": "eslint --fix .",
     "prepare": "husky install"
