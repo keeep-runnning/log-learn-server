@@ -1,4 +1,4 @@
-import db from "../db.js";
+import db from "../lib/db.js";
 
 export async function create({ title, content, authorId }) {
   return await db.post.create({

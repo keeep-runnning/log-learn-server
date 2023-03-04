@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt";
 
-import config from "../config.js";
+import config from "../lib/config.js";
 import EmailAlreadyExistError from "../error/auth/EmailAlreadyExistError.js";
 import InvalidCredentialsError from "../error/auth/InvalidCredentialsError.js";
 import InvalidOldPasswordError from "../error/auth/InvalidOldPasswordError.js";

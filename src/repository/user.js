@@ -1,4 +1,4 @@
-import db from "../db.js";
+import db from "../lib/db.js";
 
 export async function findById(id) {
   return await db.user.findUnique({ where: { id } });

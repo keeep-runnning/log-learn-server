@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import config from "./config.js";
+import config from "./lib/config.js";
 import AppError from "./error/AppError.js";
 import NotFoundError from "./error/common/NotFoundError.js";
 
