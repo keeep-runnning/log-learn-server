@@ -1,4 +1,4 @@
-# log learn server
+# log simple server
 
 > 공부한 내용을 정리할 수 있는 블로그 서비스입니다.
 
