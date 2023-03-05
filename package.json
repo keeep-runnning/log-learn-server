@@ -1,16 +1,17 @@
 {
   "name": "log-learn-server",
   "version": "1.0.0",
+  "private": true,
   "main": "app.js",
   "type": "module",
   "scripts": {
+    "prestart": "prisma migrate deploy && prisma generate",
     "start": "NODE_ENV=production node src/app",
     "dev": "NODE_ENV=development nodemon src/app",
     "prettier": "prettier --write .",
     "lint": "eslint --fix .",
     "prepare": "husky install"
   },
-  "license": "MIT",
   "dependencies": {
     "@prisma/client": "^4.8.0",
     "bcrypt": "^5.0.1",
@@ -21,16 +22,16 @@
     "express-async-errors": "^3.1.1",
     "express-validator": "^6.14.0",
     "jsonwebtoken": "^9.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "husky": "^8.0.0",
+    "prisma": "^4.8.0"
   },
   "devDependencies": {
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
-    "husky": "^8.0.0",
     "lint-staged": "^13.0.4",
     "nodemon": "^2.0.16",
-    "prettier": "2.8.0",
-    "prisma": "^4.8.0"
+    "prettier": "2.8.0"
   },
   "lint-staged": {
     "*.js": [
