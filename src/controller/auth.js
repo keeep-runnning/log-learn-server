@@ -8,6 +8,17 @@ import UsernameAlreadyExistError from "../error/auth/UsernameAlreadyExistError.j
 import { createToken } from "../lib/jwtToken.js";
 import * as userRepository from "../repository/user.js";
 
+const tokenCookieOptions =
+  process.env.NODE_ENV === "production"
+    ? {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      }
+    : {
+        httpOnly: true,
+      };
+
 export async function signup(req, res) {
   const { username, email, password: rawPassword } = req.body;
 
@@ -48,11 +59,7 @@ export async function login(req, res) {
 
   const token = await createToken({ userId: user.id });
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true,
-  });
-
+  res.cookie("token", token, tokenCookieOptions);
   res.json({
     id: user.id,
     username: user.username,
@@ -77,7 +84,7 @@ export async function me(req, res) {
 }
 
 export async function logout(req, res) {
-  res.clearCookie("token");
+  res.clearCookie("token", tokenCookieOptions);
   res.sendStatus(204);
 }
 
