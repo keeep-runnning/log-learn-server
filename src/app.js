@@ -3,6 +3,7 @@ import "express-async-errors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
 
 import config from "./lib/config.js";
 import AppError from "./error/AppError.js";
@@ -23,6 +24,7 @@ app.use(
 app.use(morgan(config.morgan.format));
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet());
 
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
@@ -47,5 +49,5 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(config.host.port, () => {
-  console.log(`log-learn server is ready on ${config.host.port} port`);
+  console.log(`server is ready on ${config.host.port} port`);
 });
