@@ -13,7 +13,6 @@ const tokenCookieOptions =
     ? {
         httpOnly: true,
         secure: true,
-        sameSite: "none",
       }
     : {
         httpOnly: true,
