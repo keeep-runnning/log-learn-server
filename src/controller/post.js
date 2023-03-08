@@ -10,7 +10,11 @@ export async function createPost(req, res) {
   const { id: userId } = req.user;
   const { title, content } = req.body;
 
-  const newPost = await postRepository.create({ title, content, authorId: userId });
+  const newPost = await postRepository.create({
+    title,
+    content,
+    authorId: userId,
+  });
 
   res.status(201).json({
     id: newPost.id,
@@ -56,7 +60,11 @@ export async function updatePost(req, res) {
     throw new ForbiddenError();
   }
 
-  const updatedPost = await postRepository.update({ id: postId, title, content });
+  const updatedPost = await postRepository.update({
+    id: postId,
+    title,
+    content,
+  });
 
   res.json({
     id: updatedPost.id,

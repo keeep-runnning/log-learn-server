@@ -13,7 +13,12 @@ import {
 
 const router = express.Router();
 
-router.get("/:postId", postIdParamValidator, validate, postController.getPostById);
+router.get(
+  "/:postId",
+  postIdParamValidator,
+  validate,
+  postController.getPostById
+);
 
 router.get(
   "/",

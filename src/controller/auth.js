@@ -31,8 +31,15 @@ export async function signup(req, res) {
     throw new EmailAlreadyExistError();
   }
 
-  const hashedPassword = await bcrypt.hash(rawPassword, config.bcrypt.saltRounds);
-  const createdUser = await userRepository.create({ username, email, password: hashedPassword });
+  const hashedPassword = await bcrypt.hash(
+    rawPassword,
+    config.bcrypt.saltRounds
+  );
+  const createdUser = await userRepository.create({
+    username,
+    email,
+    password: hashedPassword,
+  });
 
   res.status(201).json({
     id: createdUser.id,
@@ -91,12 +98,17 @@ export async function setUsername(req, res) {
   const { id: userId } = req.user;
   const { username: newUsername } = req.body;
 
-  const userFoundByNewUsername = await userRepository.findByUsername(newUsername);
+  const userFoundByNewUsername = await userRepository.findByUsername(
+    newUsername
+  );
   if (userFoundByNewUsername) {
     throw new UsernameAlreadyExistError();
   }
 
-  const updatedUsername = await userRepository.updateUsername({ id: userId, newUsername });
+  const updatedUsername = await userRepository.updateUsername({
+    id: userId,
+    newUsername,
+  });
 
   res.json({ username: updatedUsername });
 }
@@ -105,10 +117,12 @@ export async function setShortIntroduction(req, res) {
   const { id: userId } = req.user;
   const { shortIntroduction: newShortIntroduction } = req.body;
 
-  const updatedShortIntroduction = await userRepository.updateShortIntroduction({
-    id: userId,
-    newShortIntroduction,
-  });
+  const updatedShortIntroduction = await userRepository.updateShortIntroduction(
+    {
+      id: userId,
+      newShortIntroduction,
+    }
+  );
 
   res.json({ shortIntroduction: updatedShortIntroduction });
 }
@@ -135,8 +149,14 @@ export async function setPassword(req, res) {
     throw new InvalidOldPasswordError();
   }
 
-  const newHashedPassword = await bcrypt.hash(newPassword, config.bcrypt.saltRounds);
-  await userRepository.updatePassword({ id: userId, newPassword: newHashedPassword });
+  const newHashedPassword = await bcrypt.hash(
+    newPassword,
+    config.bcrypt.saltRounds
+  );
+  await userRepository.updatePassword({
+    id: userId,
+    newPassword: newHashedPassword,
+  });
 
   res.sendStatus(204);
 }

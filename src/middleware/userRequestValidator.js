@@ -11,7 +11,9 @@ export const usernameBodyValidator = body("username")
   .withMessage("유저이름을 2자 이상 20자 이하로 입력해주세요")
   .bail()
   .matches(/^[ㄱ-ㅎ가-힣\w-]+$/)
-  .withMessage("한글/영문 대소문자/숫자/언더바(_)/하이픈(-)만을 이용해 유저이름을 입력해주세요");
+  .withMessage(
+    "한글/영문 대소문자/숫자/언더바(_)/하이픈(-)만을 이용해 유저이름을 입력해주세요"
+  );
 
 export const emailBodyValidator = body("email")
   .isString()
@@ -20,11 +22,14 @@ export const emailBodyValidator = body("email")
   .notEmpty()
   .withMessage("이메일을 입력해주세요")
   .bail()
-  .matches(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/)
+  .matches(
+    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/
+  )
   .withMessage("이메일 형식이 올바르지 않습니다");
 
 const PASSWORD_LENGTH = { min: 8, max: 32 };
-const PASSWORD_PATTERN = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/;
+const PASSWORD_PATTERN =
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/;
 
 export const passwordBodyValidator = body("password")
   .isString()
