@@ -48,6 +48,6 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(config.host.port, () => {
-  console.log(`server is ready on ${config.host.port} port`);
+app.listen(config.port, () => {
+  console.log(`server is ready on ${config.port} port`);
 });

@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "prestart": "prisma migrate deploy && prisma generate",
-    "start": "NODE_ENV=production node src/app",
-    "dev": "NODE_ENV=development nodemon src/app",
+    "start": "node src/app",
+    "dev": "nodemon src/app",
     "prettier": "prettier --write .",
     "lint": "eslint --fix .",
     "prepare": "husky install"

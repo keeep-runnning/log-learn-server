@@ -3,9 +3,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config = {
-  host: {
-    port: parseInt(getEnvOrDefaultValue("HOST_PORT", "8080")),
-  },
   morgan: {
     format: getEnvOrDefaultValue("MORGAN_FORMAT", "dev"),
   },
@@ -19,6 +16,8 @@ const config = {
     secret: getEnvOrDefaultValue("JWT_SECRET"),
     expiresInSecond: parseInt(getEnvOrDefaultValue("JWT_EXPIRES_IN_SECOND")),
   },
+  port: parseInt(getEnvOrDefaultValue("PORT", "8080")),
+  env: getEnvOrDefaultValue("NODE_ENV", "development"),
 };
 
 function getEnvOrDefaultValue(key, defaultValue = null) {

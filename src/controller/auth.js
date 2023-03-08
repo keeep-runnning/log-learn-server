@@ -9,10 +9,11 @@ import { createToken } from "../lib/jwtToken.js";
 import * as userRepository from "../repository/user.js";
 
 const tokenCookieOptions =
-  process.env.NODE_ENV === "production"
+  config.env === "production"
     ? {
         httpOnly: true,
         secure: true,
+        sameSite: "Strict",
       }
     : {
         httpOnly: true,
