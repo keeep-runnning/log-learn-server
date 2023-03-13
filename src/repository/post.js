@@ -51,9 +51,8 @@ export async function findPageByAuthorName({ authorName, cursor, pageSize }) {
   };
 
   if (cursor) {
-    filter.skip = 1;
-    filter.cursor = {
-      id: cursor,
+    filter.where.id = {
+      lt: cursor,
     };
   }
 
